@@ -9,7 +9,7 @@ class ExercisePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bench Press'),
+        title: Center(child: const Text('Bench Press')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -27,118 +27,27 @@ class ExercisePage extends ConsumerWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        SizedBox(
-                          width: 65,
-                          child: TextFormField(
-                            readOnly: true,
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
-                            initialValue: '100',
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(2)
-                            ],
-                            onSaved: (String? value) {},
-                            validator: (String? value) => null,
-                          ),
-                        ),
-                        const VerticalDivider(
-                          width: 20,
-                          thickness: 2,
-                          color: Colors.purple,
-                        ),
-                        const RepField(),
-                        const RepField(),
-                        const RepField(),
-                        const RepField(),
-                      ],
-                    ),
-                  ),
-                  IntrinsicHeight(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: 65,
-                          child: TextFormField(
-                            readOnly: true,
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
-                            initialValue: '100',
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(2)
-                            ],
-                            onSaved: (String? value) {},
-                            validator: (String? value) => null,
-                          ),
-                        ),
-                        const VerticalDivider(
-                          width: 20,
-                          thickness: 2,
-                          color: Colors.purple,
-                        ),
-                        const RepField(),
-                        const RepField(),
-                        const RepField(),
-                        const RepField(),
-                      ],
-                    ),
-                  ),
-                  IntrinsicHeight(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: 65,
-                          child: TextFormField(
-                            readOnly: true,
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
-                            initialValue: '100',
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(2)
-                            ],
-                            onSaved: (String? value) {},
-                            validator: (String? value) => null,
-                          ),
-                        ),
-                        const VerticalDivider(
-                          width: 20,
-                          thickness: 2,
-                          color: Colors.purple,
-                        ),
-                        const RepField(),
-                        const RepField(),
-                        const RepField(),
-                        const RepField(),
-                      ],
-                    ),
-                  ),
-                  const IntrinsicWidth(
-                    child: Divider(
-                      color: Colors.purple,
-                      thickness: 2,
-                    ),
-                  ),
-                  IntrinsicHeight(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: 65,
-                          child: TextFormField(
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
-                            initialValue: '100',
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(2)
-                            ],
-                            onSaved: (String? value) {},
-                            validator: (String? value) => null,
-                          ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: 65,
+                              child: TextFormField(
+                                textAlign: TextAlign.center,
+                                keyboardType: TextInputType.number,
+                                initialValue: '100',
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(2)
+                                ],
+                                onSaved: (String? value) {},
+                                validator: (String? value) => null,
+                              ),
+                            ),
+                            // Balance the down arrow under rep boxes
+                            const SizedBox(
+                              height: 16,
+                            )
+                          ],
                         ),
                         const VerticalDivider(
                           width: 20,
@@ -179,20 +88,29 @@ class RepField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 65,
-      child: TextFormField(
-        readOnly: readOnly,
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.digitsOnly,
-          LengthLimitingTextInputFormatter(2)
-        ],
-        decoration: const InputDecoration(hintText: '~'),
-        onSaved: (String? value) {},
-        validator: (String? value) => null,
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 65,
+          child: TextFormField(
+            readOnly: readOnly,
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(2)
+            ],
+            decoration: const InputDecoration(hintText: '~'),
+            onSaved: (String? value) {},
+            validator: (String? value) => null,
+          ),
+        ),
+        GestureDetector(
+          child: Icon(Icons.keyboard_arrow_down_outlined),
+          onTap: () {},
+        )
+      ],
     );
   }
 }

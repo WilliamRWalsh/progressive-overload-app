@@ -9,7 +9,7 @@ class ExercisePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: const Text('Bench Press')),
+        title: const Center(child: Text('Bench Press')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -23,6 +23,295 @@ class ExercisePage extends ConsumerWidget {
               ),
               Column(
                 children: [
+                  IntrinsicHeight(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: 65,
+                              child: TextFormField(
+                                enabled: false,
+                                textAlign: TextAlign.center,
+                                keyboardType: TextInputType.number,
+                                initialValue: '90',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const VerticalDivider(
+                          width: 20,
+                          thickness: 1,
+                          color: Colors.yellow,
+                        ),
+                        SizedBox(
+                          width: 65,
+                          child: TextFormField(
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            initialValue: '14',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 65,
+                          child: TextFormField(
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            initialValue: '13',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 65,
+                          child: TextFormField(
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            initialValue: '13',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 65,
+                          child: TextFormField(
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            initialValue: '12',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IntrinsicHeight(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: 65,
+                              child: TextFormField(
+                                enabled: false,
+                                textAlign: TextAlign.center,
+                                keyboardType: TextInputType.number,
+                                initialValue: '100',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const VerticalDivider(
+                          width: 20,
+                          thickness: 1,
+                          color: Colors.yellow,
+                        ),
+                        SizedBox(
+                          width: 65,
+                          child: TextFormField(
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            initialValue: '9',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 65,
+                          child: TextFormField(
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            initialValue: '9',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 65,
+                          child: TextFormField(
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            initialValue: '8',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 65,
+                          child: TextFormField(
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            initialValue: '7',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IntrinsicHeight(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: 65,
+                              child: TextFormField(
+                                enabled: false,
+                                textAlign: TextAlign.center,
+                                keyboardType: TextInputType.number,
+                                initialValue: '100',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const VerticalDivider(
+                          width: 20,
+                          thickness: 1,
+                          color: Colors.yellow,
+                        ),
+                        SizedBox(
+                          width: 65,
+                          child: TextFormField(
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            initialValue: '10',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 65,
+                          child: TextFormField(
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            initialValue: '9',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 65,
+                          child: TextFormField(
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            initialValue: '9',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 65,
+                          child: TextFormField(
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            initialValue: '6',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
                   IntrinsicHeight(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

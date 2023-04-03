@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
               displaySmall: TextStyle(color: Colors.white, fontSize: 36),
             ),
             inputDecorationTheme: const InputDecorationTheme(
+              disabledBorder: InputBorder.none,
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   borderSide: BorderSide(color: Colors.purple, width: 2.5),

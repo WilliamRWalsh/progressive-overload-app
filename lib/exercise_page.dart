@@ -15,12 +15,13 @@ class ExercisePage extends ConsumerWidget {
         padding: const EdgeInsets.all(8.0),
         child: Form(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 '30 secs',
                 style: Theme.of(context).textTheme.displayLarge,
               ),
+              const SizedBox(height: 10),
               Column(
                 children: [
                   IntrinsicHeight(
@@ -311,9 +312,10 @@ class ExercisePage extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   IntrinsicHeight(
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Column(
@@ -352,6 +354,7 @@ class ExercisePage extends ConsumerWidget {
                   ),
                 ],
               ),
+              Expanded(child: Container()),
               SizedBox(
                 width: double.infinity,
                 height: 60,
@@ -371,9 +374,15 @@ class ExercisePage extends ConsumerWidget {
   }
 }
 
-class RepField extends StatelessWidget {
-  const RepField({Key? key, this.readOnly = false}) : super(key: key);
-  final bool readOnly;
+class RepField extends StatefulWidget {
+  const RepField({Key? key}) : super(key: key);
+
+  @override
+  State<RepField> createState() => _RepFieldState();
+}
+
+class _RepFieldState extends State<RepField> {
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -383,7 +392,6 @@ class RepField extends StatelessWidget {
         SizedBox(
           width: 65,
           child: TextFormField(
-            readOnly: readOnly,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
@@ -395,11 +403,43 @@ class RepField extends StatelessWidget {
             validator: (String? value) => null,
           ),
         ),
+        if (isExpanded) ...[
+          const SizedBox(height: 10),
+          SizedBox(
+            width: 65,
+            child: TextFormField(
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(2)
+              ],
+              decoration: const InputDecoration(hintText: 'lbs.'),
+              onSaved: (String? value) {},
+              validator: (String? value) => null,
+            ),
+          ),
+        ],
         GestureDetector(
-          child: Icon(Icons.keyboard_arrow_down_outlined),
-          onTap: () {},
+          child: Icon(isExpanded
+              ? Icons.keyboard_arrow_up_outlined
+              : Icons.keyboard_arrow_down_outlined),
+          onTap: () {
+            setState(() {
+              isExpanded = !isExpanded;
+            });
+          },
         )
       ],
     );
   }
 }
+
+final _providerOfTimer = AutoDisposeStreamProvider(
+  (ref) => Stream.periodic(
+    const Duration(seconds: 1),
+    (val) {
+      return val;
+    },
+  ),
+);

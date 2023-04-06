@@ -1,8 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:progressive_overload_app/exercise_page.dart';
+import 'package:progressive_overload_app/models/exercise.model.dart';
+import 'package:progressive_overload_app/models/exercise_type.model.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+
+  final exerciseBox = await Hive.openBox('exerciseBox');
+  // Hive.registerAdapter(ExerciseAdapter());
+
+  final exercise = Exercise(
+    type: ExerciseType(name: 'Bench'),
+    date: DateTime.now(),
+  );
+
+  exerciseBox.put(exercise.type.name, [exercise]);
+
+  print('${exerciseBox.get(exercise.type.name)}');
+
   runApp(const MyApp());
 }
 

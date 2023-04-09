@@ -1,37 +1,40 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'set.model.dart';
+part of 'exercise_set.model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SetAdapter extends TypeAdapter<Set> {
+class ExerciseSetAdapter extends TypeAdapter<ExerciseSet> {
   @override
   final int typeId = 2;
 
   @override
-  Set read(BinaryReader reader) {
+  ExerciseSet read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Set(
-      weight: fields[1] as double,
-      reps: fields[0] as int,
-      isOverridden: fields[2] as bool,
+    return ExerciseSet(
+      guid: fields[0] as String,
+      weight: fields[2] as double,
+      reps: fields[1] as int,
+      isOverridden: fields[3] as bool,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Set obj) {
+  void write(BinaryWriter writer, ExerciseSet obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.reps)
+      ..write(obj.guid)
       ..writeByte(1)
-      ..write(obj.weight)
+      ..write(obj.reps)
       ..writeByte(2)
+      ..write(obj.weight)
+      ..writeByte(3)
       ..write(obj.isOverridden);
   }
 
@@ -41,7 +44,7 @@ class SetAdapter extends TypeAdapter<Set> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SetAdapter &&
+      other is ExerciseSetAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -17,15 +17,18 @@ class ExerciseTypeAdapter extends TypeAdapter<ExerciseType> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ExerciseType(
-      name: fields[0] as String,
+      guid: fields[0] as String,
+      name: fields[1] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ExerciseType obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
+      ..write(obj.guid)
+      ..writeByte(1)
       ..write(obj.name);
   }
 

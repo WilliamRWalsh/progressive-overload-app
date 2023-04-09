@@ -3,16 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:progressive_overload_app/exercise_page.dart';
 import 'package:progressive_overload_app/models/exercise.model.dart';
+import 'package:progressive_overload_app/models/exercise_set.model.dart';
 import 'package:progressive_overload_app/models/exercise_type.model.dart';
 
 void main() async {
   await Hive.initFlutter();
 
-  final exerciseBox = await Hive.openBox('exerciseBox');
-  // Hive.registerAdapter(ExerciseAdapter());
+  Hive.registerAdapter(ExerciseTypeAdapter());
+  Hive.registerAdapter(ExerciseAdapter());
+  Hive.registerAdapter(ExerciseSetAdapter());
 
+  final exerciseBox = await Hive.openBox('exerciseBox');
   final exercise = Exercise(
-    type: ExerciseType(name: 'Bench'),
+    guid: '12-12-12',
+    type: ExerciseType(guid: '00-00-00-00', name: 'Bench'),
     date: DateTime.now(),
   );
 

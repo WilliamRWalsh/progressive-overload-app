@@ -12,10 +12,9 @@ class ExercisePage extends ConsumerWidget {
         title: const Center(child: Text('Bench Press')),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12),
         child: Form(
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 '30 secs',

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:progressive_overload_app/exercise_page.dart';
 import 'package:progressive_overload_app/models/exercise.model.dart';
 import 'package:progressive_overload_app/models/exercise_set.model.dart';
 import 'package:progressive_overload_app/models/exercise_type.model.dart';
+import 'package:progressive_overload_app/routine_list_page.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -20,9 +20,9 @@ void main() async {
     date: DateTime.now(),
   );
 
-  exerciseBox.put(exercise.type.name, [exercise]);
+  exerciseBox.put(exercise.type.guid, [exercise]);
 
-  print('${exerciseBox.get(exercise.type.name)}');
+  // print('${exerciseBox.get(exercise.type.guid)}');
 
   runApp(const MyApp());
 }
@@ -42,13 +42,13 @@ class MyApp extends StatelessWidget {
               primary: Colors.purple,
               onPrimary: Colors.black,
               secondary: Colors.yellow,
-              onSecondary: Colors.yellow,
+              onSecondary: Colors.black,
               error: Colors.red,
               onError: Colors.red,
               background: Colors.black,
               onBackground: Colors.black,
-              surface: Colors.black,
-              onSurface: Colors.grey,
+              surface: Colors.yellow,
+              onSurface: Colors.black,
             ),
             primarySwatch: Colors.purple,
             textTheme: const TextTheme(
@@ -98,6 +98,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ExercisePage();
+    return const RoutineListPage();
   }
 }

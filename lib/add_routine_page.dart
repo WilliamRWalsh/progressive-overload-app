@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:progressive_overload_app/shared/auto_complete_text_field.dart';
 
 class AddRoutinePage extends ConsumerWidget {
   const AddRoutinePage({super.key});
@@ -31,6 +32,14 @@ class AddRoutinePage extends ConsumerWidget {
                   },
                   onSaved: (val) =>
                       ref.read(_providerOfName.notifier).state = val,
+                ),
+                AutoCompleteTextField(
+                  items: ['Bench Press', 'Chest Press'],
+                  onSubmitted: (val) {},
+                  decoration: const InputDecoration(
+                    labelText: 'Exercise #1',
+                    hintText: 'Enter Exercise Name',
+                  ),
                 ),
                 SizedBox(
                   width: double.infinity,

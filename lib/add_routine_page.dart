@@ -7,6 +7,7 @@ class AddRoutinePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final numOfExercises = ref.watch(_providerOfNumOfExercises);
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text('Add a Routine')),
@@ -19,27 +20,55 @@ class AddRoutinePage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Name',
-                    hintText: 'Enter a name',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a name';
-                    }
-                    return null;
-                  },
-                  onSaved: (val) =>
-                      ref.read(_providerOfName.notifier).state = val,
-                ),
-                AutoCompleteTextField(
-                  items: ['Bench Press', 'Chest Press'],
-                  onSubmitted: (val) {},
-                  decoration: const InputDecoration(
-                    labelText: 'Exercise #1',
-                    hintText: 'Enter Exercise Name',
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Name',
+                        hintText: 'Enter a name',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a name';
+                        }
+                        return null;
+                      },
+                      onSaved: (val) =>
+                          ref.read(_providerOfName.notifier).state = val,
+                    ),
+                    const SizedBox(height: 12),
+                    for (int i = 0; i < numOfExercises; i++)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: AutoCompleteTextField(
+                          items: [],
+                          onSubmitted: (val) {
+                            final exerciseNames = Map<int, String>.from(
+                                ref.read(_providerOfExerciseNames));
+                            print('val: $val');
+
+                            exerciseNames[i] = val;
+                            ref.read(_providerOfExerciseNames.notifier).state =
+                                exerciseNames;
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'Exercise #${i + 1}',
+                            hintText: 'Enter Exercise Name',
+                          ),
+                        ),
+                      ),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.read(_providerOfNumOfExercises.notifier).state =
+                            numOfExercises + 1;
+                      },
+                      child: const Icon(
+                        Icons.add,
+                        size: 36,
+                      ),
+                    )
+                  ],
                 ),
                 SizedBox(
                   width: double.infinity,
@@ -51,6 +80,8 @@ class AddRoutinePage extends ConsumerWidget {
                           return;
                         }
                         form.save();
+
+                        print(ref.read(_providerOfExerciseNames));
 
                         // add to hive
                         // pop
@@ -66,4 +97,7 @@ class AddRoutinePage extends ConsumerWidget {
   }
 }
 
-final _providerOfName = StateProvider<String?>((ref) => null);
+final _providerOfName = AutoDisposeStateProvider<String?>((ref) => null);
+final _providerOfNumOfExercises = AutoDisposeStateProvider<int>((ref) => 3);
+final _providerOfExerciseNames =
+    AutoDisposeStateProvider<Map<int, String>>((ref) => <int, String>{});

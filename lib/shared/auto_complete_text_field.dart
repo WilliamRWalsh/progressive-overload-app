@@ -48,7 +48,9 @@ class _AutoCompleteTextFieldState extends State<AutoCompleteTextField> {
         TextFormField(
           controller: _textController,
           decoration: widget.decoration,
-          onFieldSubmitted: (value) => widget.onSubmitted(value),
+          onSaved: (value) {
+            widget.onSubmitted(value ?? '');
+          },
         ),
         if (_showAutocomplete)
           Padding(

@@ -4,7 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:progressive_overload_app/models/exercise.model.dart';
 import 'package:progressive_overload_app/models/exercise_type.model.dart';
 import 'package:progressive_overload_app/models/routine.model.dart';
-import 'package:progressive_overload_app/routine_list_page.dart';
+import 'package:progressive_overload_app/pages/routine/routine_list_page.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -92,3 +92,5 @@ class HomePage extends StatelessWidget {
     return const RoutineListPage();
   }
 }
+
+// todo: better transistions

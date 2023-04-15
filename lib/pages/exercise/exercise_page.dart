@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ExercisePage extends ConsumerWidget {
   const ExercisePage({Key? key}) : super(key: key);
-
+// todo: use type guid to build page
+// todo: hook up timer
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(

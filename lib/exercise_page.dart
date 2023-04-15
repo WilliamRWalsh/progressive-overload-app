@@ -433,12 +433,3 @@ class _RepFieldState extends State<RepField> {
     );
   }
 }
-
-final _providerOfTimer = AutoDisposeStreamProvider(
-  (ref) => Stream.periodic(
-    const Duration(seconds: 1),
-    (val) {
-      return val;
-    },
-  ),
-);

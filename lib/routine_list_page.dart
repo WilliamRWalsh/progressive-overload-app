@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:progressive_overload_app/add_routine_page.dart';
 import 'package:progressive_overload_app/providers/routine_state.dart';
 
-import 'models/routine.model.dart';
-
 class RoutineListPage extends ConsumerWidget {
   const RoutineListPage({Key? key}) : super(key: key);
 

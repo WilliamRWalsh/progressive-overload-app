@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AutoCompleteTextField extends StatefulWidget {
   const AutoCompleteTextField({
+    super.key,
     required this.items,
     required this.onSubmitted,
     required this.decoration,
@@ -12,10 +13,10 @@ class AutoCompleteTextField extends StatefulWidget {
   final InputDecoration decoration;
 
   @override
-  _AutoCompleteTextFieldState createState() => _AutoCompleteTextFieldState();
+  AutoCompleteTextFieldState createState() => AutoCompleteTextFieldState();
 }
 
-class _AutoCompleteTextFieldState extends State<AutoCompleteTextField> {
+class AutoCompleteTextFieldState extends State<AutoCompleteTextField> {
   final _textController = TextEditingController();
   bool _showAutocomplete = false;
 

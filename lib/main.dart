@@ -14,10 +14,7 @@ void main() async {
 
   Hive.registerAdapter(ExerciseTypeAdapter());
   Hive.registerAdapter(ExerciseAdapter());
-  Hive.registerAdapter(ExerciseSetAdapter());
-
-  await Hive.openBox<Routine>(RoutineHiveService.boxName);
-  await Hive.openBox<ExerciseType>(ExerciseTypeHiveService.boxName);
+  Hive.registerAdapter(RoutineAdapter());
 
   runApp(const MyApp());
 }

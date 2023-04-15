@@ -47,8 +47,9 @@ class RoutineListPage extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) =>
-            const Center(child: Text('An error occurred')),
+        error: (error, stackTrace) => const Center(
+          child: Text('An error occurred'),
+        ),
       ),
     );
   }

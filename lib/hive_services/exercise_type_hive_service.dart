@@ -7,11 +7,18 @@ class ExerciseTypeHiveService {
   ExerciseTypeHiveService();
 
   static String boxName = 'exerciseTypeBox';
-  final box = Hive.box<ExerciseType>(boxName);
 
-  List<ExerciseType> getAll() => box.values.toList();
+  Future<List<ExerciseType>> getAll() async {
+    final box = await Hive.openBox<ExerciseType>(boxName);
 
-  Future<void> set(ExerciseType routine) async => await box.add(routine);
+    return box.values.toList();
+  }
+
+  Future<void> set(ExerciseType routine) async {
+    final box = await Hive.openBox<ExerciseType>(boxName);
+
+    await box.add(routine);
+  }
 }
 
 final providerOfExerciseTypeHiveService =

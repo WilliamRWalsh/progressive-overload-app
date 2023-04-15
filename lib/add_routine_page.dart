@@ -22,108 +22,117 @@ class AddRoutinePage extends ConsumerWidget {
       ),
       body: Form(
         child: Builder(builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.all(12),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Name',
-                      hintText: 'Enter a name',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a name';
-                      }
-                      return null;
-                    },
-                    onSaved: (val) =>
-                        ref.read(_providerOfName.notifier).state = val,
-                  ),
-                  const SizedBox(height: 12),
-                  for (int i = 0; i < numOfExercises; i++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: AutoCompleteTextField(
-                        items: exerciseTypes.map((e) => e.name).toList(),
-                        onSubmitted: (val) {
-                          if (val.isEmpty) {
-                            return;
-                          }
+          return exerciseTypes.when(
+              data: (exerciseTypes) => Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              labelText: 'Name',
+                              hintText: 'Enter a name',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a name';
+                              }
+                              return null;
+                            },
+                            onSaved: (val) =>
+                                ref.read(_providerOfName.notifier).state = val,
+                          ),
+                          const SizedBox(height: 12),
+                          for (int i = 0; i < numOfExercises; i++)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: AutoCompleteTextField(
+                                items:
+                                    exerciseTypes.map((e) => e.name).toList(),
+                                onSubmitted: (val) {
+                                  if (val.isEmpty) {
+                                    return;
+                                  }
 
-                          final existingType = exerciseTypes.firstWhereOrNull(
-                            (e) => e.name == val,
-                          );
+                                  final existingType =
+                                      exerciseTypes.firstWhereOrNull(
+                                    (e) => e.name == val,
+                                  );
 
-                          final types = List<ExerciseType>.from(
-                            ref.read(_providerOfRoutineExerciseTypes),
-                          );
+                                  final types = List<ExerciseType>.from(
+                                    ref.read(_providerOfRoutineExerciseTypes),
+                                  );
 
-                          types.add(
-                            existingType ??
-                                ExerciseType(
-                                  guid: const Uuid().v4(),
-                                  name: val,
+                                  types.add(
+                                    existingType ??
+                                        ExerciseType(
+                                          guid: const Uuid().v4(),
+                                          name: val,
+                                        ),
+                                  );
+
+                                  ref
+                                      .read(_providerOfRoutineExerciseTypes
+                                          .notifier)
+                                      .state = types;
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Exercise #${i + 1}',
+                                  hintText: 'Enter Exercise Name',
                                 ),
-                          );
+                              ),
+                            ),
+                          ElevatedButton(
+                            onPressed: () {
+                              ref
+                                  .read(_providerOfNumOfExercises.notifier)
+                                  .state = numOfExercises + 1;
+                            },
+                            child: const Icon(
+                              Icons.add,
+                              size: 36,
+                            ),
+                          ),
+                          const SizedBox(height: 100),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 60,
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  final form = Form.of(context);
+                                  if (!form.validate()) {
+                                    return;
+                                  }
 
-                          ref
-                              .read(_providerOfRoutineExerciseTypes.notifier)
-                              .state = types;
-                        },
-                        decoration: InputDecoration(
-                          labelText: 'Exercise #${i + 1}',
-                          hintText: 'Enter Exercise Name',
-                        ),
+                                  form.save();
+
+                                  final routineService =
+                                      ref.read(providerOfRoutineHiveService);
+
+                                  final name = ref.read(_providerOfName) ?? '';
+                                  final types =
+                                      ref.read(_providerOfRoutineExerciseTypes);
+
+                                  routineService.set(
+                                    Routine(
+                                      guid: const Uuid().v4(),
+                                      name: name,
+                                      exerciseTypes: types,
+                                    ),
+                                  );
+                                },
+                                child: const Text('Add Routine')),
+                          )
+                        ],
                       ),
                     ),
-                  ElevatedButton(
-                    onPressed: () {
-                      ref.read(_providerOfNumOfExercises.notifier).state =
-                          numOfExercises + 1;
-                    },
-                    child: const Icon(
-                      Icons.add,
-                      size: 36,
-                    ),
                   ),
-                  const SizedBox(height: 100),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 60,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          final form = Form.of(context);
-                          if (!form.validate()) {
-                            return;
-                          }
-
-                          form.save();
-
-                          final routineService =
-                              ref.read(providerOfRoutineHiveService);
-
-                          final name = ref.read(_providerOfName) ?? '';
-                          final types =
-                              ref.read(_providerOfRoutineExerciseTypes);
-
-                          routineService.set(
-                            Routine(
-                              guid: const Uuid().v4(),
-                              name: name,
-                              exerciseTypes: types,
-                            ),
-                          );
-                        },
-                        child: const Text('Add Routine')),
-                  )
-                ],
-              ),
-            ),
-          );
+              loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+              error: (error, stackTrace) => const Text('Oops a wild error'));
         }),
       ),
     );

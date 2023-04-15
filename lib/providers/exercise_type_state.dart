@@ -3,7 +3,7 @@ import 'package:progressive_overload_app/hive_services/exercise_type_hive_servic
 import 'package:progressive_overload_app/models/exercise_type.model.dart';
 
 final providerOfExerciseTypes =
-    AutoDisposeStateProvider<List<ExerciseType>>((ref) {
+    AutoDisposeFutureProvider<List<ExerciseType>>((ref) {
   final hive = ref.watch(providerOfExerciseTypeHiveService);
   return hive.getAll();
 });

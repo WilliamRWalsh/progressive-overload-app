@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:progressive_overload_app/hive_services/exercise_type_hive_service.dart';
 import 'package:progressive_overload_app/hive_services/routine_hive_service.dart';
 import 'package:progressive_overload_app/models/exercise_type.model.dart';
 import 'package:progressive_overload_app/models/routine.model.dart';
+import 'package:progressive_overload_app/providers/exercise_type_state.dart';
 import 'package:progressive_overload_app/shared/auto_complete_text_field.dart';
 import 'package:uuid/uuid.dart';
 
@@ -14,7 +14,7 @@ class AddRoutinePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final numOfExercises = ref.watch(_providerOfNumOfExercises);
-    final exerciseTypes = ref.watch(_providerOfExerciseTypes);
+    final exerciseTypes = ref.watch(providerOfExerciseTypes);
 
     return Scaffold(
       appBar: AppBar(
@@ -136,9 +136,3 @@ final _providerOfNumOfExercises = AutoDisposeStateProvider<int>((ref) => 3);
 
 final _providerOfRoutineExerciseTypes =
     AutoDisposeStateProvider<List<ExerciseType>>((ref) => []);
-
-final _providerOfExerciseTypes =
-    AutoDisposeStateProvider<List<ExerciseType>>((ref) {
-  final exerciseTypeService = ref.read(providerOfExerciseTypeHiveService);
-  return exerciseTypeService.getAll();
-});

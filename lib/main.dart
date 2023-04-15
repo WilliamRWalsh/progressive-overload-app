@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:progressive_overload_app/hive_services/exercise_type_hive_service.dart';
+import 'package:progressive_overload_app/hive_services/routine_hive_service.dart';
 import 'package:progressive_overload_app/models/exercise.model.dart';
 import 'package:progressive_overload_app/models/exercise_set.model.dart';
 import 'package:progressive_overload_app/models/exercise_type.model.dart';
+import 'package:progressive_overload_app/models/routine.model.dart';
 import 'package:progressive_overload_app/routine_list_page.dart';
 
 void main() async {
@@ -13,16 +16,8 @@ void main() async {
   Hive.registerAdapter(ExerciseAdapter());
   Hive.registerAdapter(ExerciseSetAdapter());
 
-  final exerciseBox = await Hive.openBox('exerciseBox');
-  final exercise = Exercise(
-    guid: '12-12-12',
-    type: ExerciseType(guid: '00-00-00-00', name: 'Bench'),
-    date: DateTime.now(),
-  );
-
-  exerciseBox.put(exercise.type.guid, [exercise]);
-
-  // print('${exerciseBox.get(exercise.type.guid)}');
+  await Hive.openBox<Routine>(RoutineHiveService.boxName);
+  await Hive.openBox<ExerciseType>(ExerciseTypeHiveService.boxName);
 
   runApp(const MyApp());
 }

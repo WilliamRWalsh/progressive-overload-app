@@ -6,11 +6,16 @@ class RoutineHiveService {
   RoutineHiveService();
 
   static String boxName = 'routineBox';
-  final box = Hive.box<Routine>(boxName);
 
-  List<Routine> getAll() => box.values.toList();
+  Future<List<Routine>> getAll() async {
+    final box = await Hive.openBox<Routine>(boxName);
+    return box.values.toList();
+  }
 
-  Future<void> set(Routine routine) async => await box.add(routine);
+  Future<void> set(Routine routine) async {
+    final box = await Hive.openBox<Routine>(boxName);
+    box.add(routine);
+  }
 }
 
 final providerOfRoutineHiveService = Provider((ref) => RoutineHiveService());

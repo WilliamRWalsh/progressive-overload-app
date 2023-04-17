@@ -14,29 +14,28 @@ class RoutineDetailPage extends ConsumerWidget {
       appBar: AppBar(
         title: Center(child: Text(routine.name)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            // todo use listview builder
-            // take up width
-            for (final type in routine.exerciseTypes)
-              SizedBox(
-                height: 60,
-                child: ElevatedButton(
-                    onPressed: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          // todo pass in type guid
-                          builder: (context) => const ExercisePage(),
-                        ),
-                      );
-                    },
-                    child: Text(type.name)),
-              )
-          ],
-        ),
+      body: ListView.builder(
+        itemCount: routine.exerciseTypes.length,
+        itemBuilder: (context, index) {
+          final type = routine.exerciseTypes[index];
+          return Padding(
+            padding: const EdgeInsets.all(12),
+            child: SizedBox(
+              height: 60,
+              child: ElevatedButton(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ExercisePage(type: type),
+                    ),
+                  );
+                },
+                child: Text(type.name),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

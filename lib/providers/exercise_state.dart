@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../hive_services/exercise_hive_service.dart';
-import '../models/exercise.model.dart';
+import '../hive_services/session_hive_service.dart';
+import '../models/session.model.dart';
 
-final providerOfExercises = AutoDisposeFutureProvider<List<Exercise>>((ref) {
-  final hive = ref.watch(providerOfExerciseHiveService);
+final providerOfSessions = AutoDisposeFutureProvider<List<Session>>((ref) {
+  final hive = ref.watch(providerOfSessionHiveService);
   return hive.getAll();
 });

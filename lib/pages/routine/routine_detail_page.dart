@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:progressive_overload_app/models/routine.model.dart';
-import 'package:progressive_overload_app/pages/exercise/exercise_page.dart';
+import 'package:progressive_overload_app/pages/exercise/session_page.dart';
 
 class RoutineDetailPage extends ConsumerWidget {
   const RoutineDetailPage({Key? key, required this.routine}) : super(key: key);
@@ -27,7 +27,7 @@ class RoutineDetailPage extends ConsumerWidget {
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ExercisePage(type: type),
+                      builder: (context) => SessionPage(type: type),
                     ),
                   );
                 },

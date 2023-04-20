@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:progressive_overload_app/models/exercise.model.dart';
+import 'package:progressive_overload_app/models/session.model.dart';
 import 'package:progressive_overload_app/models/exercise_type.model.dart';
+import 'package:progressive_overload_app/models/exercise_set.model.dart';
 import 'package:progressive_overload_app/models/routine.model.dart';
 import 'package:progressive_overload_app/pages/routine/routine_list_page.dart';
 
@@ -10,8 +11,9 @@ void main() async {
   await Hive.initFlutter();
 
   Hive.registerAdapter(ExerciseTypeAdapter());
-  Hive.registerAdapter(ExerciseAdapter());
+  Hive.registerAdapter(SessionAdapter());
   Hive.registerAdapter(RoutineAdapter());
+  Hive.registerAdapter(ExerciseSetAdapter());
 
   runApp(const MyApp());
 }

@@ -12,9 +12,9 @@ class ExerciseTypeHiveService {
     return box.values.toList();
   }
 
-  Future<void> set(ExerciseType routine) async {
+  Future<void> set(ExerciseType type) async {
     final box = await Hive.openBox<ExerciseType>(boxName);
-    await box.add(routine);
+    await box.add(type);
   }
 }
 

@@ -6,11 +6,13 @@ class AutoCompleteTextField extends StatefulWidget {
     required this.items,
     required this.onSubmitted,
     required this.decoration,
+    this.initialValue,
   });
 
   final List<String> items;
   final Function(String) onSubmitted;
   final InputDecoration decoration;
+  final String? initialValue;
 
   @override
   AutoCompleteTextFieldState createState() => AutoCompleteTextFieldState();
@@ -23,6 +25,8 @@ class AutoCompleteTextFieldState extends State<AutoCompleteTextField> {
   @override
   void initState() {
     super.initState();
+    _textController.text = widget.initialValue ?? '';
+
     _textController.addListener(() {
       final currentText = _textController.text;
       setState(() {

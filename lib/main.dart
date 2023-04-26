@@ -18,14 +18,15 @@ void main() async {
   runApp(const MyApp());
 }
 
+const green = Color.fromARGB(255, 44, 212, 50);
+const orange = Color.fromARGB(255, 243, 209, 98);
+const purple = Color.fromARGB(255, 185, 28, 212);
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const green = Color.fromARGB(255, 44, 212, 50);
-    const orange = Color.fromARGB(255, 243, 209, 98);
-    const purple = Color.fromARGB(255, 185, 28, 212);
     return ProviderScope(
       child: MaterialApp(
         title: 'Progression Tracker',

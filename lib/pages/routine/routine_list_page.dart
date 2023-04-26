@@ -20,7 +20,7 @@ class RoutineListPage extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
           context,
-          FadeRoute(child: const AddRoutinePage()),
+          FadeRoute(child: const AddEditRoutinePage()),
         ),
         child: const Icon(
           Icons.add,
@@ -45,7 +45,7 @@ class RoutineListPage extends ConsumerWidget {
                           await Navigator.push(
                             context,
                             FadeRoute(
-                              child: RoutineDetailPage(routine: routine),
+                              child: AddEditRoutinePage(routine: routine),
                             ),
                           );
                         },

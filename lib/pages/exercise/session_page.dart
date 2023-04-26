@@ -7,6 +7,7 @@ import 'package:progressive_overload_app/models/session.model.dart';
 import 'package:progressive_overload_app/models/exercise_set.model.dart';
 import 'package:progressive_overload_app/providers/exercise_state.dart';
 import 'package:progressive_overload_app/utils/number_utils.dart';
+import 'package:progressive_overload_app/utils/timer.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../models/exercise_type.model.dart';
@@ -22,7 +23,7 @@ class SessionPage extends ConsumerWidget {
     final last3ExercisesAsync = ref.watch(_providerOfLast3Sessions(type.guid));
     final _ = ref.watch(_providerOfSets);
     final __ = ref.watch(_providerOfWeight);
-
+    final timer = ref.watch(_providerOfTimer);
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text(type.name)),
@@ -37,11 +38,17 @@ class SessionPage extends ConsumerWidget {
               child: Builder(builder: (context) {
                 return Column(
                   children: [
-                    Text(
-                      '30 secs',
-                      style: Theme.of(context).textTheme.displayLarge,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.timer_outlined, size: 40),
+                        Text(
+                          ' : ${timer.currentTime}',
+                          style: Theme.of(context).textTheme.displayLarge,
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 40),
                     Column(
                       children: [
                         for (final session in last3Exercises)
@@ -126,7 +133,6 @@ class SessionPage extends ConsumerWidget {
                                 thickness: 2,
                                 color: Colors.purple,
                               ),
-                              const RepField(),
                               const RepField(),
                               const RepField(),
                               const RepField(),
@@ -219,6 +225,7 @@ class _RepFieldState extends ConsumerState<RepField> {
                 LengthLimitingTextInputFormatter(2)
               ],
               decoration: const InputDecoration(hintText: '~'),
+              onTap: () => ref.refresh(_providerOfTimer),
               onChanged: (String? value) {
                 fieldKey.value.reps =
                     (value == null || value.isEmpty) ? null : int.parse(value);
@@ -277,6 +284,8 @@ final _providerOfLast3Sessions =
       .toList()
       .reversed
       .take(3)
+      .toList()
+      .reversed
       .toList();
 });
 
@@ -284,3 +293,6 @@ final _providerOfSets =
     AutoDisposeStateProvider<List<ExerciseSet?>>((ref) => []);
 
 final _providerOfWeight = AutoDisposeStateProvider<double?>((ref) => null);
+
+final _providerOfTimer = ChangeNotifierProvider.autoDispose<ClockController>(
+    (ref) => ClockController());

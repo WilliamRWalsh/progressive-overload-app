@@ -19,17 +19,20 @@ class ExerciseTypeAdapter extends TypeAdapter<ExerciseType> {
     return ExerciseType(
       guid: fields[0] as String,
       name: fields[1] as String,
+      sets: fields[2] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, ExerciseType obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.guid)
       ..writeByte(1)
-      ..write(obj.name);
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.sets);
   }
 
   @override

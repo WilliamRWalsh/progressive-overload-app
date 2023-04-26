@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:progressive_overload_app/hive_services/routine_hive_service.dart';
 import 'package:progressive_overload_app/main.dart';
@@ -39,7 +40,6 @@ class _AddEditRoutinePageState extends ConsumerState<AddEditRoutinePage> {
         child: Consumer(builder: (context, ref, _) {
           final numOfExercises = ref.watch(_providerOfNumOfExercises);
           final exerciseTypes = ref.watch(providerOfExerciseTypes);
-          final routineLen = widget.routine?.exerciseTypes.length ?? -1;
           return Form(
             child: Builder(builder: (context) {
               return exerciseTypes.when(
@@ -73,50 +73,85 @@ class _AddEditRoutinePageState extends ConsumerState<AddEditRoutinePage> {
                                       widget.routine?.exerciseTypes.length;
                                   final hasValue =
                                       length != null && i < length - 1;
-                                  final initalValue = hasValue
-                                      ? widget.routine?.exerciseTypes[i].name
-                                      : '';
+
+                                  final type = hasValue
+                                      ? widget.routine?.exerciseTypes[i]
+                                      : null;
+
                                   return Padding(
                                     padding:
                                         const EdgeInsets.symmetric(vertical: 8),
-                                    child: AutoCompleteTextField(
-                                      initialValue: initalValue,
-                                      items: exerciseTypes
-                                          .map((e) => e.name)
-                                          .toList(),
-                                      onSubmitted: (val) {
-                                        if (val.isEmpty) {
-                                          return;
-                                        }
+                                    // TODO: make this a formfield so that I can save 'sets'
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: AutoCompleteTextField(
+                                            initialValue: type?.name,
+                                            items: exerciseTypes
+                                                .map((e) => e.name)
+                                                .toList(),
+                                            onSubmitted: (val) {
+                                              if (val.isEmpty) {
+                                                return;
+                                              }
 
-                                        final existingType =
-                                            exerciseTypes.firstWhereOrNull(
-                                          (e) => e.name == val,
-                                        );
+                                              final existingType = exerciseTypes
+                                                  .firstWhereOrNull(
+                                                (e) => e.name == val,
+                                              );
 
-                                        final types = List<ExerciseType>.from(
-                                          ref.read(
-                                              _providerOfRoutineExerciseTypes),
-                                        );
+                                              final types =
+                                                  List<ExerciseType>.from(
+                                                ref.read(
+                                                    _providerOfRoutineExerciseTypes),
+                                              );
 
-                                        types.add(
-                                          existingType ??
-                                              ExerciseType(
-                                                guid: const Uuid().v4(),
-                                                name: val,
-                                              ),
-                                        );
+                                              types.add(
+                                                existingType ??
+                                                    ExerciseType(
+                                                      guid: const Uuid().v4(),
+                                                      name: val,
+                                                      sets: 3,
+                                                    ),
+                                              );
 
-                                        ref
-                                            .read(
-                                                _providerOfRoutineExerciseTypes
-                                                    .notifier)
-                                            .state = types;
-                                      },
-                                      decoration: InputDecoration(
-                                        labelText: 'Exercise #${i + 1}',
-                                        hintText: 'Enter Exercise Name',
-                                      ),
+                                              ref
+                                                  .read(
+                                                      _providerOfRoutineExerciseTypes
+                                                          .notifier)
+                                                  .state = types;
+                                            },
+                                            decoration: InputDecoration(
+                                              labelText: 'Exercise #${i + 1}',
+                                              hintText: 'Enter Exercise Name',
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        SizedBox(
+                                          width: 100,
+                                          child: TextFormField(
+                                            initialValue:
+                                                type?.sets.toString() ?? '3',
+                                            textAlign: TextAlign.center,
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: <
+                                                TextInputFormatter>[
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
+                                              LengthLimitingTextInputFormatter(
+                                                  2)
+                                            ],
+                                            decoration: const InputDecoration(
+                                                hintText: '#',
+                                                label: Text('# of Sets')),
+                                            onChanged: (String? value) {
+                                              // TODO:
+                                            },
+                                            validator: (String? value) => null,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   );
                                 }),

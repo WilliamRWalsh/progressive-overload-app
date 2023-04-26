@@ -7,10 +7,13 @@ class ExerciseType {
   ExerciseType({
     required this.guid,
     required this.name,
+    required this.sets,
   });
 
   @HiveField(0)
   String guid;
   @HiveField(1)
   String name;
+  @HiveField(2)
+  int sets;
 }

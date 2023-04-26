@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:progressive_overload_app/pages/routine/add_routine_page.dart';
 import 'package:progressive_overload_app/pages/routine/routine_detail_page.dart';
 import 'package:progressive_overload_app/providers/routine_state.dart';
+import 'package:progressive_overload_app/routing/fade_route.dart';
+import 'package:progressive_overload_app/routing/slide_in_route.dart';
 
 class RoutineListPage extends ConsumerWidget {
   const RoutineListPage({Key? key}) : super(key: key);
@@ -18,7 +20,7 @@ class RoutineListPage extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const AddRoutinePage()),
+          FadeRoute(child: const AddRoutinePage()),
         ),
         child: const Icon(
           Icons.add,
@@ -33,20 +35,48 @@ class RoutineListPage extends ConsumerWidget {
               final routine = routines[index];
               return Padding(
                 padding: const EdgeInsets.all(12),
-                child: SizedBox(
-                  height: 60,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              RoutineDetailPage(routine: routine),
-                        ),
-                      );
-                    },
-                    child: Text(routine.name),
-                  ),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      height: 60,
+                      child: ElevatedButton(
+                        child: Icon(Icons.edit),
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            FadeRoute(
+                              child: RoutineDetailPage(routine: routine),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: Card(
+                        child: SizedBox(
+                            height: 60,
+                            child: Center(
+                                child: Text(
+                              routine.name,
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ))),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 60,
+                      child: ElevatedButton(
+                        child: Icon(Icons.forward),
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            SlideInRoute(
+                              child: RoutineDetailPage(routine: routine),
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  ],
                 ),
               );
             },

@@ -5,6 +5,7 @@ import 'package:progressive_overload_app/hive_services/routine_hive_service.dart
 import 'package:progressive_overload_app/models/exercise_type.model.dart';
 import 'package:progressive_overload_app/models/routine.model.dart';
 import 'package:progressive_overload_app/providers/exercise_type_state.dart';
+import 'package:progressive_overload_app/providers/routine_state.dart';
 import 'package:progressive_overload_app/shared/auto_complete_text_field.dart';
 import 'package:uuid/uuid.dart';
 
@@ -100,7 +101,7 @@ class AddRoutinePage extends ConsumerWidget {
                             width: double.infinity,
                             height: 60,
                             child: ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   final form = Form.of(context);
                                   if (!form.validate()) {
                                     return;
@@ -115,13 +116,15 @@ class AddRoutinePage extends ConsumerWidget {
                                   final types =
                                       ref.read(_providerOfRoutineExerciseTypes);
 
-                                  routineService.set(
+                                  await routineService.set(
                                     Routine(
                                       guid: const Uuid().v4(),
                                       name: name,
                                       exerciseTypes: types,
                                     ),
                                   );
+                                  ref.refresh(providerOfRoutines);
+                                  Navigator.of(context).pop();
                                 },
                                 child: const Text('Add Routine')),
                           )

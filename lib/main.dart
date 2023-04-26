@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const green = Color.fromARGB(255, 44, 212, 50);
-
+    const orange = Color.fromARGB(255, 243, 209, 98);
     const purple = Color.fromARGB(255, 185, 28, 212);
     return ProviderScope(
       child: MaterialApp(
@@ -51,7 +51,11 @@ class MyApp extends StatelessWidget {
               displayLarge: TextStyle(color: Colors.white, fontSize: 46),
               displayMedium: TextStyle(color: Colors.white, fontSize: 42),
               displaySmall: TextStyle(color: Colors.white, fontSize: 36),
+              labelLarge: TextStyle(color: Colors.black, fontSize: 32),
+              labelMedium: TextStyle(color: Colors.black, fontSize: 20),
             ),
+            cardColor: orange,
+            cardTheme: CardTheme(surfaceTintColor: Colors.black),
             inputDecorationTheme: InputDecorationTheme(
               disabledBorder: InputBorder.none,
               focusedBorder: const OutlineInputBorder(

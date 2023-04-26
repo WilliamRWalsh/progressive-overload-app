@@ -6,6 +6,7 @@ import 'package:progressive_overload_app/hive_services/session_hive_service.dart
 import 'package:progressive_overload_app/models/session.model.dart';
 import 'package:progressive_overload_app/models/exercise_set.model.dart';
 import 'package:progressive_overload_app/providers/exercise_state.dart';
+import 'package:progressive_overload_app/utils/number_utils.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../models/exercise_type.model.dart';
@@ -28,6 +29,8 @@ class SessionPage extends ConsumerWidget {
       ),
       body: last3ExercisesAsync.when(
         data: (last3Exercises) {
+          final weight = last3Exercises.firstOrNull?.weight ?? 0;
+
           return Padding(
             padding: const EdgeInsets.all(12),
             child: Form(
@@ -51,26 +54,11 @@ class SessionPage extends ConsumerWidget {
                                     SizedBox(
                                       width: 65,
                                       child: TextFormField(
-                                        onSaved: (val) {
-                                          if (val == null) {
-                                            return;
-                                          }
-
-                                          ref
-                                              .read(_providerOfWeight.notifier)
-                                              .state = double.parse(val);
-                                        },
                                         enabled: false,
                                         textAlign: TextAlign.center,
                                         keyboardType: TextInputType.number,
-                                        initialValue: session.weight.toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .secondary),
+                                        initialValue:
+                                            getFormatedDecimal(session.weight),
                                       ),
                                     ),
                                   ],
@@ -78,7 +66,7 @@ class SessionPage extends ConsumerWidget {
                                 const VerticalDivider(
                                   width: 20,
                                   thickness: 1,
-                                  color: Colors.yellow,
+                                  color: Colors.purple,
                                 ),
                                 for (final set in session.sets ?? [])
                                   SizedBox(
@@ -88,13 +76,6 @@ class SessionPage extends ConsumerWidget {
                                       textAlign: TextAlign.center,
                                       keyboardType: TextInputType.number,
                                       initialValue: set?.reps?.toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary),
                                     ),
                                   ),
                               ],
@@ -113,15 +94,25 @@ class SessionPage extends ConsumerWidget {
                                     child: TextFormField(
                                       textAlign: TextAlign.center,
                                       keyboardType: TextInputType.number,
-                                      initialValue: last3Exercises
-                                          .firstOrNull?.weight
-                                          .toString(),
+                                      initialValue: getFormatedDecimal(weight),
                                       inputFormatters: <TextInputFormatter>[
                                         FilteringTextInputFormatter.digitsOnly,
-                                        LengthLimitingTextInputFormatter(2)
+                                        LengthLimitingTextInputFormatter(4)
                                       ],
-                                      onSaved: (String? value) {},
-                                      validator: (String? value) => null,
+                                      validator: (String? value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Enter Weight';
+                                        }
+                                      },
+                                      onSaved: (val) {
+                                        if (val == null) {
+                                          return;
+                                        }
+
+                                        ref
+                                            .read(_providerOfWeight.notifier)
+                                            .state = double.parse(val);
+                                      },
                                     ),
                                   ),
                                   // Balance the down arrow under rep boxes
@@ -260,9 +251,12 @@ class _RepFieldState extends ConsumerState<RepField> {
             ),
           ],
           GestureDetector(
-            child: Icon(isExpanded
-                ? Icons.keyboard_arrow_up_outlined
-                : Icons.keyboard_arrow_down_outlined),
+            child: Icon(
+              isExpanded
+                  ? Icons.keyboard_arrow_up_outlined
+                  : Icons.keyboard_arrow_down_outlined,
+              color: Colors.orange,
+            ),
             onTap: () {
               setState(() {
                 isExpanded = !isExpanded;

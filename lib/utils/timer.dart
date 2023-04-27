@@ -3,6 +3,13 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 class ClockController extends ChangeNotifier {
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  bool _disposed = false;
   int _currentTime = 0;
 
   ClockController() {
@@ -14,7 +21,9 @@ class ClockController extends ChangeNotifier {
   void _startTimer() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       _currentTime += 1;
-      notifyListeners();
+      if (!_disposed) {
+        notifyListeners();
+      }
     });
   }
 }

@@ -46,9 +46,11 @@ class MyApp extends StatelessWidget {
               onSurface: Colors.black,
             ),
             textTheme: const TextTheme(
-              bodyLarge: TextStyle(color: Colors.white, fontSize: 20),
-              bodyMedium: TextStyle(color: Colors.white, fontSize: 16),
-              bodySmall: TextStyle(color: Colors.white, fontSize: 16),
+              titleMedium:
+                  TextStyle(color: Colors.white, fontSize: 24), // textfields
+              bodyLarge: TextStyle(color: Colors.white, fontSize: 58),
+              bodyMedium: TextStyle(color: Colors.white, fontSize: 58),
+              bodySmall: TextStyle(color: Colors.white, fontSize: 58),
               displayLarge: TextStyle(
                 color: Colors.white,
                 fontSize: 46,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:progressive_overload_app/main.dart';
 import 'package:progressive_overload_app/pages/routine/add_routine_page.dart';
 import 'package:progressive_overload_app/pages/routine/routine_detail_page.dart';
 import 'package:progressive_overload_app/providers/routine_state.dart';

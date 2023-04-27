@@ -276,9 +276,11 @@ class _RepFieldState extends ConsumerState<RepField> {
   }
 }
 
+// TODO: last 4
 final _providerOfLast3Sessions =
     AutoDisposeFutureProvider.family<List<Session>, String>((ref, guid) async {
   final exercises = await ref.watch(providerOfSessions.future);
+
   return exercises
       .where((e) => e.type.guid == guid)
       .toList()

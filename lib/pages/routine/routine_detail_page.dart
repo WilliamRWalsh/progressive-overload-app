@@ -87,7 +87,7 @@ class RoutineDetailPage extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           type.name,
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style: Theme.of(context).textTheme.labelMedium,
                         ),
                       ),
                     ),
@@ -104,6 +104,7 @@ class RoutineDetailPage extends ConsumerWidget {
                           child: SessionPage(type: type),
                         ),
                       );
+                      ref.refresh(_providerOfSessionStatus(type.guid));
                     },
                   ),
                 )

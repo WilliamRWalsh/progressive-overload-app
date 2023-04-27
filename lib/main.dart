@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
               ),
               displayMedium: TextStyle(color: Colors.white, fontSize: 42),
               displaySmall: TextStyle(color: Colors.white, fontSize: 36),
-              labelLarge: TextStyle(color: Colors.black, fontSize: 32),
+              labelLarge: TextStyle(color: Colors.black, fontSize: 28),
               labelMedium: TextStyle(color: Colors.black, fontSize: 20),
             ),
             cardColor: orange,

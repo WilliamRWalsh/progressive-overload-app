@@ -51,7 +51,7 @@ class RoutineDetailPage extends ConsumerWidget {
                         width: 60,
                         child: Icon(
                           Icons.check,
-                          color: green,
+                          color: primaryActionColor,
                           size: 40,
                         ),
                       );

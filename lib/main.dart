@@ -18,9 +18,20 @@ void main() async {
   runApp(const MyApp());
 }
 
-const green = Color.fromARGB(255, 44, 212, 50);
-const orange = Color.fromARGB(255, 243, 209, 98);
-const purple = Color.fromARGB(255, 185, 28, 212);
+// Primary Action
+const primaryActionColor = Color.fromARGB(255, 44, 212, 50);
+
+// Secondary Action
+const secondaryActionColor = Colors.orange;
+
+// Background
+const backgroundColor = Colors.black;
+
+// Card
+const cardColor = Color.fromARGB(255, 243, 209, 98);
+
+// App Bar
+const appBarColor = Color.fromARGB(255, 185, 28, 212);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -31,19 +42,19 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Progression Tracker',
         theme: ThemeData(
-            scaffoldBackgroundColor: Colors.black87,
+            scaffoldBackgroundColor: backgroundColor,
             colorScheme: const ColorScheme(
               brightness: Brightness.dark,
-              primary: green,
-              onPrimary: Colors.black,
-              secondary: green,
-              onSecondary: Colors.black,
+              primary: primaryActionColor,
+              onPrimary: backgroundColor,
+              secondary: primaryActionColor,
+              onSecondary: backgroundColor,
               error: Colors.red,
               onError: Colors.red,
-              background: Colors.black,
-              onBackground: Colors.black,
-              surface: purple,
-              onSurface: Colors.black,
+              background: backgroundColor,
+              onBackground: backgroundColor,
+              surface: appBarColor,
+              onSurface: backgroundColor,
             ),
             textTheme: const TextTheme(
               titleMedium:
@@ -58,16 +69,16 @@ class MyApp extends StatelessWidget {
               ),
               displayMedium: TextStyle(color: Colors.white, fontSize: 42),
               displaySmall: TextStyle(color: Colors.white, fontSize: 36),
-              labelLarge: TextStyle(color: Colors.black, fontSize: 28),
-              labelMedium: TextStyle(color: Colors.black, fontSize: 20),
+              labelLarge: TextStyle(color: backgroundColor, fontSize: 28),
+              labelMedium: TextStyle(color: backgroundColor, fontSize: 20),
             ),
-            cardColor: orange,
-            cardTheme: CardTheme(surfaceTintColor: Colors.black),
+            cardColor: cardColor,
+            // cardTheme: CardTheme(surfaceTintColor: backgroundColor),
             inputDecorationTheme: InputDecorationTheme(
               disabledBorder: InputBorder.none,
               focusedBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide: BorderSide(color: purple, width: 2.5),
+                  borderSide: BorderSide(color: appBarColor, width: 2.5),
                   gapPadding: 30),
               enabledBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10)),

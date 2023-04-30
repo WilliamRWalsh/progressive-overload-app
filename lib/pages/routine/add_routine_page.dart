@@ -162,7 +162,7 @@ class _AddEditRoutinePageState extends ConsumerState<AddEditRoutinePage> {
                                       .state = numOfExercises + 1;
                                 },
                                 icon: Container(
-                                  color: green,
+                                  color: primaryActionColor,
                                   child: const Icon(
                                     Icons.add,
                                     color: Colors.black,

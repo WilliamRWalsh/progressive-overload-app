@@ -16,11 +16,12 @@ class SessionPage extends ConsumerWidget {
   const SessionPage({Key? key, required this.type}) : super(key: key);
   final ExerciseType type;
 
-// todo: hook up timer
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final last3ExercisesAsync = ref.watch(_providerOfLast3Sessions(type.guid));
+    final last3ExercisesAsync =
+        ref.watch(_providerOfLast3CompletedSessions(type.guid));
+    final incompleteSessionAsync =
+        ref.watch(_providerOfIncompleteSession(type.guid));
     final _ = ref.watch(_providerOfSets);
     final __ = ref.watch(_providerOfWeight);
     final timer = ref.watch(_providerOfTimer);
@@ -28,180 +29,207 @@ class SessionPage extends ConsumerWidget {
       appBar: AppBar(
         title: Center(child: Text(type.name)),
       ),
-      body: last3ExercisesAsync.when(
-        data: (last3Exercises) {
-          final weight = last3Exercises.firstOrNull?.weight ?? 0;
+      body: incompleteSessionAsync.when(
+        data: (incompleteSession) {
+          return last3ExercisesAsync.when(
+            data: (last3Exercises) {
+              final weight = last3Exercises.firstOrNull?.weight ?? 0;
 
-          return Padding(
-            padding: const EdgeInsets.all(12),
-            child: Form(
-              child: Builder(builder: (context) {
-                return Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+              return Padding(
+                padding: const EdgeInsets.all(12),
+                child: Form(
+                  child: Builder(builder: (context) {
+                    return Column(
                       children: [
-                        Icon(Icons.timer_outlined, size: 40),
-                        Text(
-                          ' : ${timer.currentTime}',
-                          style: Theme.of(context).textTheme.displayLarge,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${timer.currentTime}',
+                              style: Theme.of(context).textTheme.displayLarge,
+                            ),
+                            const Icon(Icons.timer_outlined, size: 40),
+                          ],
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 40),
-                    Column(
-                      children: [
-                        for (final session in last3Exercises)
-                          IntrinsicHeight(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Column(
+                        const SizedBox(height: 40),
+                        Column(
+                          children: [
+                            for (final session in last3Exercises)
+                              IntrinsicHeight(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    SizedBox(
-                                      width: 65,
-                                      child: TextFormField(
-                                        enabled: false,
-                                        textAlign: TextAlign.center,
-                                        keyboardType: TextInputType.number,
-                                        initialValue:
-                                            getFormatedDecimal(session.weight),
-                                      ),
+                                    Column(
+                                      children: [
+                                        SizedBox(
+                                          width: 65,
+                                          child: TextFormField(
+                                            enabled: false,
+                                            textAlign: TextAlign.center,
+                                            keyboardType: TextInputType.number,
+                                            initialValue: getFormatedDecimal(
+                                                session.weight),
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                    const VerticalDivider(
+                                      width: 20,
+                                      thickness: 1,
+                                      color: Colors.purple,
+                                    ),
+                                    for (final set in session.sets ?? [])
+                                      SizedBox(
+                                        width: 65,
+                                        child: TextFormField(
+                                          enabled: false,
+                                          textAlign: TextAlign.center,
+                                          keyboardType: TextInputType.number,
+                                          initialValue: set?.reps?.toString(),
+                                        ),
+                                      ),
                                   ],
                                 ),
-                                const VerticalDivider(
-                                  width: 20,
-                                  thickness: 1,
-                                  color: Colors.purple,
-                                ),
-                                for (final set in session.sets ?? [])
-                                  SizedBox(
-                                    width: 65,
-                                    child: TextFormField(
-                                      enabled: false,
-                                      textAlign: TextAlign.center,
-                                      keyboardType: TextInputType.number,
-                                      initialValue: set?.reps?.toString(),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        const SizedBox(height: 10),
-                        IntrinsicHeight(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Column(
+                              ),
+                            const SizedBox(height: 10),
+                            IntrinsicHeight(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  SizedBox(
-                                    width: 65,
-                                    child: TextFormField(
-                                      textAlign: TextAlign.center,
-                                      keyboardType: TextInputType.number,
-                                      initialValue: getFormatedDecimal(weight),
-                                      inputFormatters: <TextInputFormatter>[
-                                        FilteringTextInputFormatter.digitsOnly,
-                                        LengthLimitingTextInputFormatter(4)
-                                      ],
-                                      validator: (String? value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Enter Weight';
-                                        }
-                                      },
-                                      onSaved: (val) {
-                                        if (val == null) {
-                                          return;
-                                        }
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                        width: 65,
+                                        child: TextFormField(
+                                          textAlign: TextAlign.center,
+                                          keyboardType: TextInputType.number,
+                                          initialValue:
+                                              getFormatedDecimal(weight),
+                                          inputFormatters: <TextInputFormatter>[
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                            LengthLimitingTextInputFormatter(4)
+                                          ],
+                                          validator: (String? value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Enter Weight';
+                                            }
+                                          },
+                                          onSaved: (val) {
+                                            if (val == null) {
+                                              return;
+                                            }
 
-                                        ref
-                                            .read(_providerOfWeight.notifier)
-                                            .state = double.parse(val);
-                                      },
-                                    ),
+                                            ref
+                                                .read(
+                                                    _providerOfWeight.notifier)
+                                                .state = double.parse(val);
+                                          },
+                                        ),
+                                      ),
+                                      // Balance the down arrow under rep boxes
+                                      const SizedBox(
+                                        height: 16,
+                                      )
+                                    ],
                                   ),
-                                  // Balance the down arrow under rep boxes
-                                  const SizedBox(
-                                    height: 16,
-                                  )
+                                  const VerticalDivider(
+                                    width: 20,
+                                    thickness: 2,
+                                    color: Colors.purple,
+                                  ),
+                                  // pass value from `incompleteSession`
+                                  for (var i = 0; i < type.sets; i++)
+                                    RepField(
+                                        initialValue:
+                                            incompleteSession?.sets?[i]?.reps),
                                 ],
                               ),
-                              const VerticalDivider(
-                                width: 20,
-                                thickness: 2,
-                                color: Colors.purple,
-                              ),
-                              const RepField(),
-                              const RepField(),
-                              const RepField(),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Expanded(child: Container()),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 60,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          final form = Form.of(context);
-                          if (!form.validate()) {
-                            return;
-                          }
-                          form.save();
-
-                          final hiveSession =
-                              ref.read(providerOfSessionHiveService);
-                          final sets = ref.read(_providerOfSets);
-                          final weight = ref.read(_providerOfWeight);
-                          hiveSession.set(
-                            Session(
-                              guid: const Uuid().v4(),
-                              date: DateTime.now(),
-                              type: type,
-                              sets: sets,
-                              weight: weight ?? 0,
                             ),
-                          );
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          'Done',
-                          style: Theme.of(context).textTheme.displaySmall,
+                          ],
                         ),
-                      ),
-                    )
-                  ],
-                );
-              }),
+                        Expanded(child: Container()),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 60,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              final form = Form.of(context);
+                              if (!form.validate()) {
+                                return;
+                              }
+                              form.save();
+
+                              final hiveSession =
+                                  ref.read(providerOfSessionHiveService);
+                              final sets = ref.read(_providerOfSets);
+                              final weight = ref.read(_providerOfWeight);
+                              hiveSession.set(
+                                Session(
+                                  guid: const Uuid().v4(),
+                                  date: DateTime.now(),
+                                  type: type,
+                                  sets: sets,
+                                  weight: weight ?? 0,
+                                ),
+                              );
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Done',
+                              style: Theme.of(context).textTheme.displaySmall,
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  }),
+                ),
+              );
+            },
+            loading: () => const Center(
+              child: CircularProgressIndicator(),
             ),
+            error: (error, stackTrace) =>
+                Text('Oops something went wrong: $error'),
           );
         },
         loading: () => const Center(
           child: CircularProgressIndicator(),
         ),
-        error: (error, stackTrace) => Text('Oops something went wrong: $error'),
+        error: (error, stackTrace) => const Text('Oops a wild error'),
       ),
     );
   }
 }
 
 class RepField extends ConsumerStatefulWidget {
-  const RepField({Key? key}) : super(key: key);
+  const RepField({Key? key, this.initialValue}) : super(key: key);
 
   @override
   ConsumerState<RepField> createState() => _RepFieldState();
+
+  final int? initialValue;
 }
 
 class _RepFieldState extends ConsumerState<RepField> {
+  late ValueKey<ExerciseSet> fieldKey;
+
+  @override
+  void initState() {
+    fieldKey = ValueKey<ExerciseSet>(ExerciseSet(reps: widget.initialValue));
+    super.initState();
+  }
+
   bool isExpanded = false;
-  final fieldKey = ValueKey<ExerciseSet>(ExerciseSet());
 
   @override
   Widget build(BuildContext context) {
+    print(widget.initialValue);
     return FormField<ExerciseSet>(
       key: fieldKey,
       onSaved: (val) {
@@ -218,6 +246,7 @@ class _RepFieldState extends ConsumerState<RepField> {
           SizedBox(
             width: 65,
             child: TextFormField(
+              initialValue: widget.initialValue?.toString(),
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               inputFormatters: <TextInputFormatter>[
@@ -276,8 +305,7 @@ class _RepFieldState extends ConsumerState<RepField> {
   }
 }
 
-// TODO: last 4
-final _providerOfLast3Sessions =
+final _providerOfLast3CompletedSessions =
     AutoDisposeFutureProvider.family<List<Session>, String>((ref, guid) async {
   final exercises = await ref.watch(providerOfSessions.future);
 
@@ -285,10 +313,29 @@ final _providerOfLast3Sessions =
       .where((e) => e.type.guid == guid)
       .toList()
       .reversed
+      .take(4)
+      .where((e) =>
+          DateTime.now().difference(e.date).inMinutes > 120 ||
+          e.sets?.every((s) => s?.reps != null) == true)
       .take(3)
       .toList()
       .reversed
       .toList();
+});
+
+final _providerOfIncompleteSession =
+    AutoDisposeFutureProvider.family<Session?, String>((ref, guid) async {
+  final exercises = await ref.watch(providerOfSessions.future);
+
+  final last = exercises.where((e) => e.type.guid == guid).last;
+  if (DateTime.now().difference(last.date).inMinutes <= 120 &&
+      last.sets?.any((e) => e?.reps == null) == true) {
+    print('last');
+    return last;
+  }
+  print('_providerOfIncompleteSession => null: ${last.sets?.first?.reps}');
+
+  return null;
 });
 
 final _providerOfSets =

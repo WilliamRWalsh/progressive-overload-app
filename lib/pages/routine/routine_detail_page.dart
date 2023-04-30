@@ -124,7 +124,7 @@ final _providerOfSessionStatus =
       allSessions.where((e) => e.type.guid == guid).toList().reversed.toList();
 
   if (reversedSession.isEmpty ||
-      reversedSession[0].date.difference(DateTime.now()).inMinutes >= 120) {
+      DateTime.now().difference(reversedSession[0].date).inMinutes >= 120) {
     return SessionStatus.EMPTY;
   }
 

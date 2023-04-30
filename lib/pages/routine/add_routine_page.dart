@@ -165,7 +165,7 @@ class _AddEditRoutinePageState extends ConsumerState<AddEditRoutinePage> {
                                   color: primaryActionColor,
                                   child: const Icon(
                                     Icons.add,
-                                    color: Colors.black,
+                                    color: backgroundColor,
                                     size: 32,
                                   ),
                                 ),

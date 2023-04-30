@@ -29,7 +29,8 @@ class RoutineDetailPage extends ConsumerWidget {
             child: Row(
               children: [
                 Card(
-                  color: Colors.black,
+                  elevation: 0,
+                  color: backgroundColor,
                   child: Builder(builder: (context) {
                     if (status == SessionStatus.EMPTY) {
                       return const SizedBox(
@@ -72,7 +73,7 @@ class RoutineDetailPage extends ConsumerWidget {
                       width: 60,
                       child: Icon(
                         Icons.circle_outlined,
-                        color: Colors.black,
+                        color: backgroundColor,
                         size: 40,
                       ),
                     );

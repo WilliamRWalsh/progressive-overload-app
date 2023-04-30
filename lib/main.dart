@@ -19,19 +19,19 @@ void main() async {
 }
 
 // Primary Action
-const primaryActionColor = Color.fromARGB(255, 44, 212, 50);
+const primaryActionColor = Color(0xff61E786);
 
 // Secondary Action
-const secondaryActionColor = Colors.orange;
+const secondaryActionColor = Color(0xff8D99AE);
 
 // Background
-const backgroundColor = Colors.black;
+const backgroundColor = Color(0xff2B2D42);
 
 // Card
-const cardColor = Color.fromARGB(255, 243, 209, 98);
+const cardColor = Color(0xffEE964B);
 
 // App Bar
-const appBarColor = Color.fromARGB(255, 185, 28, 212);
+const appBarColor = Color(0xffF95738);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

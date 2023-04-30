@@ -78,7 +78,7 @@ class SessionPage extends ConsumerWidget {
                                     const VerticalDivider(
                                       width: 20,
                                       thickness: 1,
-                                      color: Colors.purple,
+                                      color: appBarColor,
                                     ),
                                     for (final set in session.sets ?? [])
                                       SizedBox(
@@ -143,7 +143,7 @@ class SessionPage extends ConsumerWidget {
                                   const VerticalDivider(
                                     width: 20,
                                     thickness: 2,
-                                    color: Colors.purple,
+                                    color: appBarColor,
                                   ),
                                   // pass value from `incompleteSession`
                                   for (var i = 0; i < type.sets; i++)

@@ -330,8 +330,9 @@ final _providerOfIncompleteSession =
     AutoDisposeFutureProvider.family<Session?, String>((ref, guid) async {
   final exercises = await ref.watch(providerOfSessions.future);
 
-  final last = exercises.where((e) => e.type.guid == guid).last;
-  if (DateTime.now().difference(last.date).inMinutes <= 120 &&
+  final last = exercises.where((e) => e.type.guid == guid).lastOrNull;
+  if (last != null &&
+      DateTime.now().difference(last.date).inMinutes <= 120 &&
       last.sets?.any((e) => e?.reps == null) == true) {
     return last;
   }

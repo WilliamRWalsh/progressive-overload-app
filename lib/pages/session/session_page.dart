@@ -106,8 +106,9 @@ class SessionPage extends ConsumerWidget {
                                         child: TextFormField(
                                           textAlign: TextAlign.center,
                                           keyboardType: TextInputType.number,
-                                          initialValue:
-                                              getFormatedDecimal(weight),
+                                          initialValue: getFormatedDecimal(
+                                              incompleteSession?.weight ??
+                                                  weight),
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter
                                                 .digitsOnly,
@@ -157,7 +158,7 @@ class SessionPage extends ConsumerWidget {
                           width: double.infinity,
                           height: 60,
                           child: ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               final form = Form.of(context);
                               if (!form.validate()) {
                                 return;
@@ -168,7 +169,7 @@ class SessionPage extends ConsumerWidget {
                                   ref.read(providerOfSessionHiveService);
                               final sets = ref.read(_providerOfSets);
                               final weight = ref.read(_providerOfWeight);
-                              hiveSession.set(
+                              await hiveSession.set(
                                 Session(
                                   guid: const Uuid().v4(),
                                   date: DateTime.now(),
@@ -177,6 +178,7 @@ class SessionPage extends ConsumerWidget {
                                   weight: weight ?? 0,
                                 ),
                               );
+
                               Navigator.pop(context);
                             },
                             child: Text(
@@ -229,7 +231,6 @@ class _RepFieldState extends ConsumerState<RepField> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.initialValue);
     return FormField<ExerciseSet>(
       key: fieldKey,
       onSaved: (val) {
@@ -330,10 +331,8 @@ final _providerOfIncompleteSession =
   final last = exercises.where((e) => e.type.guid == guid).last;
   if (DateTime.now().difference(last.date).inMinutes <= 120 &&
       last.sets?.any((e) => e?.reps == null) == true) {
-    print('last');
     return last;
   }
-  print('_providerOfIncompleteSession => null: ${last.sets?.first?.reps}');
 
   return null;
 });

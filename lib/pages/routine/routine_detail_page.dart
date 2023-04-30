@@ -104,7 +104,7 @@ class RoutineDetailPage extends ConsumerWidget {
                           child: SessionPage(type: type),
                         ),
                       );
-                      ref.refresh(_providerOfSessionStatus(type.guid));
+                      ref.refresh(providerOfSessions);
                     },
                   ),
                 )

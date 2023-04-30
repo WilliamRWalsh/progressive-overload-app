@@ -235,6 +235,7 @@ class _RepFieldState extends ConsumerState<RepField> {
   Widget build(BuildContext context) {
     return FormField<ExerciseSet>(
       key: fieldKey,
+      initialValue: ExerciseSet(reps: widget.initialValue),
       onSaved: (val) {
         final sets = List<ExerciseSet?>.from(
           ref.read(_providerOfSets),

@@ -31,7 +31,7 @@ const backgroundColor = Color(0xff2B2D42);
 const cardColor = Color(0xffEE964B);
 
 // App Bar
-const appBarColor = Color(0xffF95738);
+const appBarColor = cardColor;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

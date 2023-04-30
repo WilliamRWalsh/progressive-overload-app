@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:progressive_overload_app/hive_services/session_hive_service.dart';
+import 'package:progressive_overload_app/main.dart';
 import 'package:progressive_overload_app/models/session.model.dart';
 import 'package:progressive_overload_app/models/exercise_set.model.dart';
 import 'package:progressive_overload_app/providers/exercise_state.dart';
@@ -119,6 +120,7 @@ class SessionPage extends ConsumerWidget {
                                                 value.isEmpty) {
                                               return 'Enter Weight';
                                             }
+                                            return null;
                                           },
                                           onSaved: (val) {
                                             if (val == null) {
@@ -292,7 +294,7 @@ class _RepFieldState extends ConsumerState<RepField> {
               isExpanded
                   ? Icons.keyboard_arrow_up_outlined
                   : Icons.keyboard_arrow_down_outlined,
-              color: Colors.orange,
+              color: secondaryActionColor,
             ),
             onTap: () {
               setState(() {

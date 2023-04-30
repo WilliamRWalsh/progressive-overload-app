@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:progressive_overload_app/main.dart';
 import 'package:progressive_overload_app/models/routine.model.dart';
-import 'package:progressive_overload_app/models/session.model.dart';
 import 'package:progressive_overload_app/pages/session/session_page.dart';
 import 'package:progressive_overload_app/providers/exercise_state.dart';
-import 'package:progressive_overload_app/routing/fade_route.dart';
 import 'package:progressive_overload_app/routing/slide_in_route.dart';
 
 class RoutineDetailPage extends ConsumerWidget {
@@ -63,7 +61,7 @@ class RoutineDetailPage extends ConsumerWidget {
                         width: 60,
                         child: Icon(
                           Icons.do_disturb_on_outlined,
-                          color: Colors.orange,
+                          color: secondaryActionColor,
                           size: 40,
                         ),
                       );

@@ -5,7 +5,7 @@ class FadeRoute extends PageRouteBuilder {
 
   FadeRoute({required this.child})
       : super(
-          transitionDuration: Duration(milliseconds: 500),
+          transitionDuration: const Duration(milliseconds: 500),
           pageBuilder: (
             BuildContext context,
             Animation<double> animation,

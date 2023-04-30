@@ -116,5 +116,3 @@ class HomePage extends StatelessWidget {
     return const RoutineListPage();
   }
 }
-
-// todo: better transistions

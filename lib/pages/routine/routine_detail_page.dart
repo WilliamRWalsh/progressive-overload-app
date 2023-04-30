@@ -15,7 +15,8 @@ class RoutineDetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text(routine.name)),
+        centerTitle: true,
+        title: Text(routine.name),
       ),
       body: ListView.builder(
         itemCount: routine.exerciseTypes.length,

@@ -16,7 +16,8 @@ class RoutineListPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('Pick Your Routine')),
+        centerTitle: true,
+        title: Text('Pick Your Routine'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(

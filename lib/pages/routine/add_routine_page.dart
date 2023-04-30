@@ -33,7 +33,9 @@ class _AddEditRoutinePageState extends ConsumerState<AddEditRoutinePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text(isEdit ? 'Edit Routine' : 'Add a Routine')),
+        title: Align(
+            alignment: Alignment.center,
+            child: Text(isEdit ? 'Edit Routine' : 'Add a Routine')),
       ),
       body: ProviderScope(
         overrides: [_providerOfRoutine.overrideWithValue(stateController)],

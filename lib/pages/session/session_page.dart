@@ -28,7 +28,8 @@ class SessionPage extends ConsumerWidget {
     final timer = ref.watch(_providerOfTimer);
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text(type.name)),
+        centerTitle: true,
+        title: Text(type.name),
       ),
       body: incompleteSessionAsync.when(
         data: (incompleteSession) {
@@ -184,7 +185,7 @@ class SessionPage extends ConsumerWidget {
                               Navigator.pop(context);
                             },
                             child: Text(
-                              'Done',
+                              'Save & Continue',
                               style: Theme.of(context).textTheme.displaySmall,
                             ),
                           ),

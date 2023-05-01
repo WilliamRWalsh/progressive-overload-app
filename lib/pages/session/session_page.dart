@@ -7,6 +7,7 @@ import 'package:progressive_overload_app/main.dart';
 import 'package:progressive_overload_app/models/session.model.dart';
 import 'package:progressive_overload_app/models/exercise_set.model.dart';
 import 'package:progressive_overload_app/providers/exercise_state.dart';
+import 'package:progressive_overload_app/shared/dirty_flag_form.dart';
 import 'package:progressive_overload_app/utils/number_utils.dart';
 import 'package:progressive_overload_app/utils/timer.dart';
 import 'package:uuid/uuid.dart';
@@ -26,39 +27,136 @@ class SessionPage extends ConsumerWidget {
     final _ = ref.watch(_providerOfSets);
     final __ = ref.watch(_providerOfWeight);
     final timer = ref.watch(_providerOfTimer);
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(type.name),
-      ),
-      body: incompleteSessionAsync.when(
-        data: (incompleteSession) {
-          return last3ExercisesAsync.when(
-            data: (last3Exercises) {
-              final weight = last3Exercises.firstOrNull?.weight ?? 0;
-
-              return Padding(
+    return WillPopScope(
+      onWillPop: () async {
+        final shouldPop = await showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog(
+              backgroundColor: cardColor,
+              child: Padding(
                 padding: const EdgeInsets.all(12),
-                child: Form(
-                  child: Builder(builder: (context) {
-                    return Column(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Are you sure?',
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      'Unsaved changes will be lost.',
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '${timer.currentTime}',
-                              style: Theme.of(context).textTheme.displayLarge,
+                        SizedBox(
+                          width: 80,
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: secondaryActionColor),
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: Icon(
+                              Icons.check_rounded,
                             ),
-                            const Icon(Icons.timer_outlined, size: 40),
-                          ],
+                          ),
                         ),
-                        const SizedBox(height: 40),
-                        Column(
-                          children: [
-                            for (final session in last3Exercises)
+                        SizedBox(
+                          width: 80,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: Icon(
+                              Icons.clear_rounded,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+        return shouldPop ?? false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(type.name),
+        ),
+        body: incompleteSessionAsync.when(
+          data: (incompleteSession) {
+            return last3ExercisesAsync.when(
+              data: (last3Exercises) {
+                final weight = last3Exercises.firstOrNull?.weight ?? 0;
+
+                return Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Form(
+                    child: Builder(builder: (context) {
+                      return Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${timer.currentTime}',
+                                style: Theme.of(context).textTheme.displayLarge,
+                              ),
+                              const Icon(Icons.timer_outlined, size: 40),
+                            ],
+                          ),
+                          const SizedBox(height: 40),
+                          Column(
+                            children: [
+                              for (final session in last3Exercises)
+                                IntrinsicHeight(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          SizedBox(
+                                            width: 65,
+                                            child: TextFormField(
+                                              enabled: false,
+                                              textAlign: TextAlign.center,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              initialValue: getFormatedDecimal(
+                                                  session.weight),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const VerticalDivider(
+                                        width: 20,
+                                        thickness: 1,
+                                        color: appBarColor,
+                                      ),
+                                      for (final set in session.sets ?? [])
+                                        SizedBox(
+                                          width: 65,
+                                          child: TextFormField(
+                                            enabled: false,
+                                            textAlign: TextAlign.center,
+                                            keyboardType: TextInputType.number,
+                                            initialValue: set?.reps?.toString(),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              const SizedBox(height: 10),
                               IntrinsicHeight(
                                 child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
@@ -67,146 +165,108 @@ class SessionPage extends ConsumerWidget {
                                         SizedBox(
                                           width: 65,
                                           child: TextFormField(
-                                            enabled: false,
                                             textAlign: TextAlign.center,
                                             keyboardType: TextInputType.number,
                                             initialValue: getFormatedDecimal(
-                                                session.weight),
+                                                incompleteSession?.weight ??
+                                                    weight),
+                                            inputFormatters: <
+                                                TextInputFormatter>[
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
+                                              LengthLimitingTextInputFormatter(
+                                                  4)
+                                            ],
+                                            validator: (String? value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return 'Enter Weight';
+                                              }
+                                              return null;
+                                            },
+                                            onSaved: (val) {
+                                              if (val == null) {
+                                                return;
+                                              }
+
+                                              ref
+                                                  .read(_providerOfWeight
+                                                      .notifier)
+                                                  .state = double.parse(val);
+                                            },
                                           ),
                                         ),
+                                        // Balance the down arrow under rep boxes
+                                        const SizedBox(height: 16)
                                       ],
                                     ),
                                     const VerticalDivider(
                                       width: 20,
-                                      thickness: 1,
+                                      thickness: 2,
                                       color: appBarColor,
                                     ),
-                                    for (final set in session.sets ?? [])
-                                      SizedBox(
-                                        width: 65,
-                                        child: TextFormField(
-                                          enabled: false,
-                                          textAlign: TextAlign.center,
-                                          keyboardType: TextInputType.number,
-                                          initialValue: set?.reps?.toString(),
-                                        ),
-                                      ),
+                                    // pass value from `incompleteSession`
+                                    for (var i = 0; i < type.sets; i++)
+                                      RepField(
+                                          initialValue: incompleteSession
+                                              ?.sets?[i]?.reps),
                                   ],
                                 ),
                               ),
-                            const SizedBox(height: 10),
-                            IntrinsicHeight(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Column(
-                                    children: [
-                                      SizedBox(
-                                        width: 65,
-                                        child: TextFormField(
-                                          textAlign: TextAlign.center,
-                                          keyboardType: TextInputType.number,
-                                          initialValue: getFormatedDecimal(
-                                              incompleteSession?.weight ??
-                                                  weight),
-                                          inputFormatters: <TextInputFormatter>[
-                                            FilteringTextInputFormatter
-                                                .digitsOnly,
-                                            LengthLimitingTextInputFormatter(4)
-                                          ],
-                                          validator: (String? value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return 'Enter Weight';
-                                            }
-                                            return null;
-                                          },
-                                          onSaved: (val) {
-                                            if (val == null) {
-                                              return;
-                                            }
+                            ],
+                          ),
+                          Expanded(child: Container()),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 60,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                final form = Form.of(context);
+                                if (!form.validate()) {
+                                  return;
+                                }
+                                form.save();
 
-                                            ref
-                                                .read(
-                                                    _providerOfWeight.notifier)
-                                                .state = double.parse(val);
-                                          },
-                                        ),
-                                      ),
-                                      // Balance the down arrow under rep boxes
-                                      const SizedBox(
-                                        height: 16,
-                                      )
-                                    ],
+                                final hiveSession =
+                                    ref.read(providerOfSessionHiveService);
+                                final sets = ref.read(_providerOfSets);
+                                final weight = ref.read(_providerOfWeight);
+                                await hiveSession.set(
+                                  Session(
+                                    guid: const Uuid().v4(),
+                                    date: DateTime.now(),
+                                    type: type,
+                                    sets: sets,
+                                    weight: weight ?? 0,
                                   ),
-                                  const VerticalDivider(
-                                    width: 20,
-                                    thickness: 2,
-                                    color: appBarColor,
-                                  ),
-                                  // pass value from `incompleteSession`
-                                  for (var i = 0; i < type.sets; i++)
-                                    RepField(
-                                        initialValue:
-                                            incompleteSession?.sets?[i]?.reps),
-                                ],
+                                );
+
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Save & Continue',
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                             ),
-                          ],
-                        ),
-                        Expanded(child: Container()),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 60,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              final form = Form.of(context);
-                              if (!form.validate()) {
-                                return;
-                              }
-                              form.save();
-
-                              final hiveSession =
-                                  ref.read(providerOfSessionHiveService);
-                              final sets = ref.read(_providerOfSets);
-                              final weight = ref.read(_providerOfWeight);
-                              await hiveSession.set(
-                                Session(
-                                  guid: const Uuid().v4(),
-                                  date: DateTime.now(),
-                                  type: type,
-                                  sets: sets,
-                                  weight: weight ?? 0,
-                                ),
-                              );
-
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              'Save & Continue',
-                              style: Theme.of(context).textTheme.displaySmall,
-                            ),
-                          ),
-                        )
-                      ],
-                    );
-                  }),
-                ),
-              );
-            },
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            error: (error, stackTrace) =>
-                Text('Oops something went wrong: $error'),
-          );
-        },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
+                          )
+                        ],
+                      );
+                    }),
+                  ),
+                );
+              },
+              loading: () => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              error: (error, stackTrace) =>
+                  Text('Oops something went wrong: $error'),
+            );
+          },
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          error: (error, stackTrace) => const Text('Oops a wild error'),
         ),
-        error: (error, stackTrace) => const Text('Oops a wild error'),
       ),
     );
   }

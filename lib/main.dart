@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:progressive_overload_app/models/session.model.dart';
 import 'package:progressive_overload_app/models/exercise_type.model.dart';
@@ -71,6 +72,11 @@ class MyApp extends StatelessWidget {
               displaySmall: TextStyle(color: Colors.white, fontSize: 36),
               labelLarge: TextStyle(color: backgroundColor, fontSize: 28),
               labelMedium: TextStyle(color: backgroundColor, fontSize: 20),
+              labelSmall: TextStyle(
+                color: backgroundColor,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             cardColor: cardColor,
             // cardTheme: CardTheme(surfaceTintColor: backgroundColor),

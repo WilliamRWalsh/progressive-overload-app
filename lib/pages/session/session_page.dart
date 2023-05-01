@@ -7,8 +7,6 @@ import 'package:progressive_overload_app/main.dart';
 import 'package:progressive_overload_app/models/session.model.dart';
 import 'package:progressive_overload_app/models/exercise_set.model.dart';
 import 'package:progressive_overload_app/providers/exercise_state.dart';
-import 'package:progressive_overload_app/shared/dirty_flag_form.dart';
-import 'package:progressive_overload_app/shared/toast.dart';
 import 'package:progressive_overload_app/utils/number_utils.dart';
 import 'package:progressive_overload_app/utils/timer.dart';
 import 'package:uuid/uuid.dart';
@@ -45,7 +43,7 @@ class SessionPage extends ConsumerWidget {
                       'Are you sure?',
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Text(
                       'Unsaved changes will be lost.',
                       style: Theme.of(context).textTheme.labelMedium,
@@ -250,7 +248,7 @@ class SessionPage extends ConsumerWidget {
                                         ),
                                       );
 
-                                      // TODO: topast
+                                      // TODO: showToast
                                     },
                                     child: Text(
                                       'Save',

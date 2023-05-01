@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:progressive_overload_app/models/session.model.dart';
 import 'package:progressive_overload_app/models/exercise_type.model.dart';
@@ -61,8 +60,8 @@ class MyApp extends StatelessWidget {
               titleMedium:
                   TextStyle(color: Colors.white, fontSize: 24), // textfields
               bodyLarge: TextStyle(color: Colors.white, fontSize: 58),
-              bodyMedium: TextStyle(color: Colors.white, fontSize: 58),
-              bodySmall: TextStyle(color: Colors.white, fontSize: 58),
+              bodyMedium: TextStyle(color: Colors.white, fontSize: 42),
+              bodySmall: TextStyle(color: Colors.white, fontSize: 16),
               displayLarge: TextStyle(
                 color: Colors.white,
                 fontSize: 46,

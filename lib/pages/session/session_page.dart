@@ -8,6 +8,7 @@ import 'package:progressive_overload_app/models/session.model.dart';
 import 'package:progressive_overload_app/models/exercise_set.model.dart';
 import 'package:progressive_overload_app/providers/exercise_state.dart';
 import 'package:progressive_overload_app/shared/dirty_flag_form.dart';
+import 'package:progressive_overload_app/shared/toast.dart';
 import 'package:progressive_overload_app/utils/number_utils.dart';
 import 'package:progressive_overload_app/utils/timer.dart';
 import 'package:uuid/uuid.dart';
@@ -27,6 +28,7 @@ class SessionPage extends ConsumerWidget {
     final _ = ref.watch(_providerOfSets);
     final __ = ref.watch(_providerOfWeight);
     final timer = ref.watch(_providerOfTimer);
+
     return WillPopScope(
       onWillPop: () async {
         final shouldPop = await showDialog(
@@ -216,38 +218,92 @@ class SessionPage extends ConsumerWidget {
                             ],
                           ),
                           Expanded(child: Container()),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 60,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                final form = Form.of(context);
-                                if (!form.validate()) {
-                                  return;
-                                }
-                                form.save();
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Expanded(
+                                child: SizedBox(
+                                  height: 60,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: secondaryActionColor,
+                                    ),
+                                    onPressed: () async {
+                                      final form = Form.of(context);
+                                      if (!form.validate()) {
+                                        return;
+                                      }
+                                      form.save();
 
-                                final hiveSession =
-                                    ref.read(providerOfSessionHiveService);
-                                final sets = ref.read(_providerOfSets);
-                                final weight = ref.read(_providerOfWeight);
-                                await hiveSession.set(
-                                  Session(
-                                    guid: const Uuid().v4(),
-                                    date: DateTime.now(),
-                                    type: type,
-                                    sets: sets,
-                                    weight: weight ?? 0,
+                                      final hiveSession = ref
+                                          .read(providerOfSessionHiveService);
+                                      final sets = ref.read(_providerOfSets);
+                                      final weight =
+                                          ref.read(_providerOfWeight);
+                                      await hiveSession.set(
+                                        Session(
+                                          guid: const Uuid().v4(),
+                                          date: DateTime.now(),
+                                          type: type,
+                                          sets: sets,
+                                          weight: weight ?? 0,
+                                        ),
+                                      );
+
+                                      // TODO: topast
+                                    },
+                                    child: Text(
+                                      'Save',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall
+                                          ?.copyWith(color: backgroundColor),
+                                    ),
                                   ),
-                                );
-
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                'Save & Continue',
-                                style: Theme.of(context).textTheme.displaySmall,
+                                ),
                               ),
-                            ),
+                              SizedBox(width: 5),
+                              Expanded(
+                                child: SizedBox(
+                                  height: 60,
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      final form = Form.of(context);
+                                      if (!form.validate()) {
+                                        return;
+                                      }
+                                      form.save();
+
+                                      final hiveSession = ref
+                                          .read(providerOfSessionHiveService);
+                                      final sets = ref.read(_providerOfSets);
+                                      final weight =
+                                          ref.read(_providerOfWeight);
+                                      await hiveSession.set(
+                                        Session(
+                                          guid: const Uuid().v4(),
+                                          date: DateTime.now(),
+                                          type: type,
+                                          sets: sets,
+                                          weight: weight ?? 0,
+                                        ),
+                                      );
+
+                                      // showToast('Changes Saved!');
+
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      'Continue',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall
+                                          ?.copyWith(color: backgroundColor),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           )
                         ],
                       );

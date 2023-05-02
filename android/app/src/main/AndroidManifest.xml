@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.progressive_overload_app">
    <application
-        android:label="progressive_overload_app"
+        android:label="GainsGuru"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

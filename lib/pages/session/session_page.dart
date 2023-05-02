@@ -7,6 +7,7 @@ import 'package:progressive_overload_app/main.dart';
 import 'package:progressive_overload_app/models/session.model.dart';
 import 'package:progressive_overload_app/models/exercise_set.model.dart';
 import 'package:progressive_overload_app/providers/exercise_state.dart';
+import 'package:progressive_overload_app/shared/unsaved_changes_dialog.dart';
 import 'package:progressive_overload_app/utils/number_utils.dart';
 import 'package:progressive_overload_app/utils/timer.dart';
 import 'package:uuid/uuid.dart';
@@ -29,54 +30,7 @@ class SessionPage extends ConsumerWidget {
         final shouldPop = await showDialog(
           context: context,
           builder: (context) {
-            return Dialog(
-              backgroundColor: cardColor,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Are you sure?',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      'Unsaved changes will be lost.',
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: 80,
-                          height: 50,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: secondaryActionColor),
-                            onPressed: () => Navigator.of(context).pop(true),
-                            child: Icon(
-                              Icons.check_rounded,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 80,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: Icon(
-                              Icons.clear_rounded,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
+            return const UnsavedChangesDialog();
           },
         );
         return shouldPop ?? false;
@@ -173,15 +127,21 @@ class _SessionFormState extends ConsumerState<SessionForm> {
                                 children: [
                                   Column(
                                     children: [
-                                      SizedBox(
-                                        width: 65,
-                                        child: TextFormField(
-                                          enabled: false,
-                                          textAlign: TextAlign.center,
-                                          keyboardType: TextInputType.number,
-                                          initialValue: getFormatedDecimal(
-                                              session.weight),
-                                        ),
+                                      Stack(
+                                        alignment: Alignment.topRight,
+                                        children: [
+                                          SizedBox(
+                                            width: 65,
+                                            child: TextFormField(
+                                              enabled: false,
+                                              textAlign: TextAlign.center,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              initialValue: getFormatedDecimal(
+                                                  session.weight),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -190,16 +150,47 @@ class _SessionFormState extends ConsumerState<SessionForm> {
                                     thickness: 1,
                                     color: appBarColor,
                                   ),
-                                  for (final set in session.sets ?? [])
-                                    SizedBox(
-                                      width: 65,
-                                      child: TextFormField(
-                                        enabled: false,
-                                        textAlign: TextAlign.center,
-                                        keyboardType: TextInputType.number,
-                                        initialValue: set?.reps?.toString(),
-                                      ),
-                                    ),
+                                  for (ExerciseSet? s in session.sets ?? [])
+                                    Builder(builder: (context) {
+                                      final overrideWieght = s?.overrideWeight;
+                                      if (overrideWieght == null) {
+                                        return SizedBox(
+                                          width: 65,
+                                          child: TextFormField(
+                                            enabled: false,
+                                            textAlign: TextAlign.center,
+                                            keyboardType: TextInputType.number,
+                                            initialValue: s?.reps?.toString(),
+                                          ),
+                                        );
+                                      }
+                                      return Stack(
+                                        alignment: Alignment.centerRight,
+                                        children: [
+                                          SizedBox(
+                                            width: 65,
+                                            child: TextFormField(
+                                              enabled: false,
+                                              textAlign: TextAlign.center,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              initialValue: s?.reps?.toString(),
+                                            ),
+                                          ),
+                                          if (overrideWieght != session.weight)
+                                            Icon(
+                                              (overrideWieght > session.weight)
+                                                  ? Icons.arrow_drop_up_sharp
+                                                  : Icons.arrow_drop_down_sharp,
+                                              size: 28,
+                                              color: (overrideWieght >
+                                                      session.weight)
+                                                  ? cardColor
+                                                  : secondaryActionColor,
+                                            )
+                                        ],
+                                      );
+                                    }),
                                 ],
                               ),
                             ),
@@ -324,6 +315,8 @@ class _SessionFormState extends ConsumerState<SessionForm> {
                                       ref.read(_providerOfSession);
                                   newSession.sets = sets;
                                   newSession.weight = weight ?? 0;
+                                  ref.read(_providerOfSession.notifier).state =
+                                      newSession;
 
                                   await hiveSession.set(newSession);
                                   ref.refresh(providerOfSessions);
@@ -469,10 +462,9 @@ final _providerOfLast3CompletedSessions =
     AutoDisposeFutureProvider.family<List<Session>, String>((ref, guid) async {
   final exercises = await ref.watch(providerOfSessions.future);
 
-  return exercises
-      .where((e) => e.type.guid == guid)
-      .toList()
-      .reversed
+  final sorted = exercises.where((e) => e.type.guid == guid).toList()
+    ..sort((a, b) => b.date.compareTo(a.date));
+  final three = sorted
       .take(4)
       .where((e) =>
           DateTime.now().difference(e.date).inMinutes > 120 ||
@@ -481,6 +473,8 @@ final _providerOfLast3CompletedSessions =
       .toList()
       .reversed
       .toList();
+
+  return three;
 });
 
 final _providerOfIncompleteSession =

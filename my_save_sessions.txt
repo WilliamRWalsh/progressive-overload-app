@@ -1,0 +1,14 @@
+--- Push ---
+Inc. Bench
+(100) 8 7 6
+
+Lateral Raises
+(20) 13 12 10
+
+Db. Bench
+(45) 12 10 9
+
+Skull Crushers
+(50) 12 10 9
+
+

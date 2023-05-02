@@ -91,7 +91,7 @@ class _SessionFormState extends ConsumerState<SessionForm> {
         ref.watch(_providerOfLast3CompletedSessions(widget.type.guid));
     return last3ExercisesAsync.when(
       data: (last3Exercises) {
-        final weight = last3Exercises.firstOrNull?.weight ?? 0;
+        final weight = last3Exercises.firstOrNull?.weight;
 
         return ProviderScope(
           overrides: [
@@ -99,6 +99,18 @@ class _SessionFormState extends ConsumerState<SessionForm> {
           ],
           child: Consumer(builder: (context, ref, _) {
             final session = ref.watch(_providerOfSession);
+            final last3StrIndex = {
+              for (final e in last3Exercises)
+                e.guid: ((e.sets
+                                ?.map((s) => s?.reps)
+                                .whereType<int>()
+                                .reduce((value, element) => value + element) ??
+                            0) *
+                        e.weight /
+                        42)
+                    .floor(),
+            };
+
             return Padding(
               padding: const EdgeInsets.all(12),
               child: Form(
@@ -191,6 +203,18 @@ class _SessionFormState extends ConsumerState<SessionForm> {
                                         ],
                                       );
                                     }),
+                                  SizedBox(width: 5),
+                                  CircleAvatar(
+                                    backgroundColor: cardColor,
+                                    child: Center(
+                                      child: Text(
+                                        last3StrIndex[session.guid].toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall,
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
@@ -244,6 +268,11 @@ class _SessionFormState extends ConsumerState<SessionForm> {
                                 // pass value from `incompleteSession`
                                 for (var i = 0; i < widget.type.sets; i++)
                                   RepField(set: session.sets?[i]),
+                                const SizedBox(width: 5),
+                                const CircleAvatar(
+                                  backgroundColor: backgroundColor,
+                                  child: null,
+                                )
                               ],
                             ),
                           ),

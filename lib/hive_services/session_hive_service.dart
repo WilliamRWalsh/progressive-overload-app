@@ -5,16 +5,16 @@ import 'package:progressive_overload_app/models/session.model.dart';
 class SessionHiveService {
   SessionHiveService();
 
-  static String boxName = 'exerciseBox';
+  static String boxName = 'sessionBox';
 
   Future<List<Session>> getAll() async {
     final box = await Hive.openBox<Session>(boxName);
     return box.values.toList();
   }
 
-  Future<void> set(Session exercise) async {
+  Future<void> set(Session session) async {
     final box = await Hive.openBox<Session>(boxName);
-    await box.add(exercise);
+    await box.put(session.guid, session);
   }
 }
 

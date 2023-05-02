@@ -252,9 +252,7 @@ class _SessionFormState extends ConsumerState<SessionForm> {
                                 ),
                                 // pass value from `incompleteSession`
                                 for (var i = 0; i < widget.type.sets; i++)
-                                  RepField(
-                                      initialValue: widget
-                                          .incompleteSession?.sets?[i]?.reps),
+                                  RepField(set: session.sets?[i]),
                               ],
                             ),
                           ),
@@ -282,15 +280,15 @@ class _SessionFormState extends ConsumerState<SessionForm> {
                                       ref.read(providerOfSessionHiveService);
                                   final sets = ref.read(_providerOfSets);
                                   final weight = ref.read(_providerOfWeight);
-                                  await hiveSession.set(
-                                    Session(
-                                      guid: const Uuid().v4(),
-                                      date: DateTime.now(),
-                                      type: widget.type,
-                                      sets: sets,
-                                      weight: weight ?? 0,
-                                    ),
-                                  );
+
+                                  final newSession =
+                                      ref.read(_providerOfSession);
+                                  newSession.sets = sets;
+                                  newSession.weight = weight ?? 0;
+                                  ref.read(_providerOfSession.notifier).state =
+                                      newSession;
+
+                                  await hiveSession.set(newSession);
                                   ref.refresh(_providerOfSets);
 
                                   // TODO: showToast
@@ -321,15 +319,14 @@ class _SessionFormState extends ConsumerState<SessionForm> {
                                       ref.read(providerOfSessionHiveService);
                                   final sets = ref.read(_providerOfSets);
                                   final weight = ref.read(_providerOfWeight);
-                                  await hiveSession.set(
-                                    Session(
-                                      guid: const Uuid().v4(),
-                                      date: DateTime.now(),
-                                      type: widget.type,
-                                      sets: sets,
-                                      weight: weight ?? 0,
-                                    ),
-                                  );
+
+                                  final newSession =
+                                      ref.read(_providerOfSession);
+                                  newSession.sets = sets;
+                                  newSession.weight = weight ?? 0;
+
+                                  await hiveSession.set(newSession);
+                                  ref.refresh(providerOfSessions);
 
                                   // showToast('Changes Saved!');
 
@@ -364,12 +361,12 @@ class _SessionFormState extends ConsumerState<SessionForm> {
 }
 
 class RepField extends ConsumerStatefulWidget {
-  const RepField({Key? key, this.initialValue}) : super(key: key);
+  const RepField({Key? key, this.set}) : super(key: key);
 
   @override
   ConsumerState<RepField> createState() => _RepFieldState();
 
-  final int? initialValue;
+  final ExerciseSet? set;
 }
 
 class _RepFieldState extends ConsumerState<RepField> {
@@ -377,8 +374,14 @@ class _RepFieldState extends ConsumerState<RepField> {
 
   @override
   void initState() {
-    fieldKey = ValueKey<ExerciseSet>(ExerciseSet(reps: widget.initialValue));
     super.initState();
+
+    fieldKey = ValueKey<ExerciseSet>(
+      ExerciseSet(
+        reps: widget.set?.reps,
+        overrideWeight: widget.set?.overrideWeight,
+      ),
+    );
   }
 
   bool isExpanded = false;
@@ -387,7 +390,7 @@ class _RepFieldState extends ConsumerState<RepField> {
   Widget build(BuildContext context) {
     return FormField<ExerciseSet>(
       key: fieldKey,
-      initialValue: ExerciseSet(reps: widget.initialValue),
+      initialValue: fieldKey.value,
       onSaved: (val) {
         final sets = List<ExerciseSet?>.from(
           ref.read(_providerOfSets),
@@ -402,7 +405,7 @@ class _RepFieldState extends ConsumerState<RepField> {
           SizedBox(
             width: 65,
             child: TextFormField(
-              initialValue: widget.initialValue?.toString(),
+              initialValue: widget.set?.reps?.toString(),
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               inputFormatters: <TextInputFormatter>[
@@ -424,6 +427,7 @@ class _RepFieldState extends ConsumerState<RepField> {
             SizedBox(
               width: 65,
               child: TextFormField(
+                initialValue: widget.set?.overrideWeight?.toString(),
                 textAlign: TextAlign.center,
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[

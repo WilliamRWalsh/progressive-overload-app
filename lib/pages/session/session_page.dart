@@ -229,6 +229,11 @@ class _SessionFormState extends ConsumerState<SessionForm> {
                                     SizedBox(
                                       width: 65,
                                       child: TextFormField(
+                                        textInputAction: TextInputAction.next,
+                                        autofocus:
+                                            (widget.incompleteSession?.weight ??
+                                                    weight) ==
+                                                null,
                                         textAlign: TextAlign.center,
                                         keyboardType: TextInputType.number,
                                         initialValue: getFormatedDecimal(
@@ -427,6 +432,7 @@ class _RepFieldState extends ConsumerState<RepField> {
           SizedBox(
             width: 65,
             child: TextFormField(
+              textInputAction: TextInputAction.next,
               initialValue: widget.set?.reps?.toString(),
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
@@ -440,6 +446,9 @@ class _RepFieldState extends ConsumerState<RepField> {
                 fieldKey.value.reps =
                     (value == null || value.isEmpty) ? null : int.parse(value);
                 state.didChange(fieldKey.value);
+                if (value != null && value.length > 1) {
+                  TextInputAction.next;
+                }
               },
               validator: (String? value) => null,
             ),

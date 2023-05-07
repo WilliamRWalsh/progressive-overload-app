@@ -6,6 +6,7 @@ import 'package:progressive_overload_app/pages/routine/routine_detail_page.dart'
 import 'package:progressive_overload_app/providers/routine_state.dart';
 import 'package:progressive_overload_app/routing/fade_route.dart';
 import 'package:progressive_overload_app/routing/slide_in_route.dart';
+import 'package:progressive_overload_app/shared/chart.dart';
 import 'package:progressive_overload_app/shared/expansion_card.dart';
 
 class RoutineListPage extends ConsumerWidget {
@@ -32,6 +33,7 @@ class RoutineListPage extends ConsumerWidget {
       ),
       body: routines.when(
         data: (routines) {
+          return LineChartSample2();
           return ListView.builder(
             itemCount: routines.length,
             itemBuilder: (context, index) {

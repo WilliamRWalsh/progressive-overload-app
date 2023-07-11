@@ -29,6 +29,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
           bottom: 12,
         ),
         child: LineChart(LineChartData(
+          lineTouchData:
+              LineTouchData(touchTooltipData: LineTouchTooltipData()),
           gridData: FlGridData(
             show: true,
             drawVerticalLine: true,
@@ -110,7 +112,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
               barWidth: 5,
               isStrokeCapRound: true,
               dotData: FlDotData(
-                show: false,
+                // getDotPainter: () {},
+                show: true,
               ),
               belowBarData: BarAreaData(
                 show: true,

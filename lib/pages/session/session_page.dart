@@ -538,4 +538,4 @@ final _providerOfTimer = ChangeNotifierProvider.autoDispose<ClockController>(
     (ref) => ClockController());
 
 final _providerOfSession = AutoDisposeStateProvider<Session>(
-    (ref) => throw '_providerOfSession was scoped.');
+    (ref) => throw '_providerOfSession needs to be scoped.');

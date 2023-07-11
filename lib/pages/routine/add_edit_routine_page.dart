@@ -20,11 +20,12 @@ class AddEditRoutinePage extends ConsumerStatefulWidget {
 }
 
 class _AddEditRoutinePageState extends ConsumerState<AddEditRoutinePage> {
-  late StateController<Routine?> stateController;
+  late StateController<Routine> stateController;
   @override
   void initState() {
     super.initState();
-    stateController = StateController(widget.routine);
+    stateController = StateController(widget.routine ??
+        Routine(guid: const Uuid().v4(), name: '', exerciseTypes: []));
   }
 
   @override
@@ -42,6 +43,7 @@ class _AddEditRoutinePageState extends ConsumerState<AddEditRoutinePage> {
         child: Consumer(builder: (context, ref, _) {
           final numOfExercises = ref.watch(_providerOfNumOfExercises);
           final exerciseTypes = ref.watch(providerOfExerciseTypes);
+          final routine = ref.watch(_providerOfRoutine);
           return Form(
             child: Builder(builder: (context) {
               return exerciseTypes.when(
@@ -70,13 +72,10 @@ class _AddEditRoutinePageState extends ConsumerState<AddEditRoutinePage> {
                             const SizedBox(height: 12),
                             for (int i = 0; i < numOfExercises; i++)
                               Builder(builder: (context) {
-                                final length =
-                                    widget.routine?.exerciseTypes.length;
-                                final hasValue =
-                                    length != null && i < length - 1;
-
-                                final type = hasValue
-                                    ? widget.routine?.exerciseTypes[i]
+                                final hasTypeAtIndex =
+                                    routine.exerciseTypes.length > i;
+                                final type = hasTypeAtIndex
+                                    ? routine.exerciseTypes[i]
                                     : null;
 
                                 return Padding(
@@ -198,13 +197,16 @@ class _AddEditRoutinePageState extends ConsumerState<AddEditRoutinePage> {
                                     final types = ref
                                         .read(_providerOfRoutineExerciseTypes);
 
-                                    await routineService.set(
-                                      Routine(
-                                        guid: const Uuid().v4(),
-                                        name: name,
-                                        exerciseTypes: types,
-                                      ),
-                                    );
+                                    final newRoutine =
+                                        ref.read(_providerOfRoutine);
+                                    newRoutine.name = name;
+                                    newRoutine.exerciseTypes = types;
+
+                                    ref
+                                        .read(_providerOfRoutine.notifier)
+                                        .state = newRoutine;
+
+                                    await routineService.set(newRoutine);
                                     ref.refresh(providerOfRoutines);
                                     Navigator.of(context).pop();
                                   },
@@ -228,18 +230,24 @@ class _AddEditRoutinePageState extends ConsumerState<AddEditRoutinePage> {
 
 final _providerOfName = AutoDisposeStateProvider<String?>((ref) {
   final routine = ref.watch(_providerOfRoutine);
-  return routine?.name;
+  return routine.name;
 }, dependencies: [_providerOfRoutine]);
 
 final _providerOfNumOfExercises = AutoDisposeStateProvider<int>((ref) {
   final routine = ref.watch(_providerOfRoutine);
-  return routine != null ? routine.exerciseTypes.length : 3;
+
+  if (routine.exerciseTypes.length == 0) {
+    return 3;
+  }
+
+  return routine.exerciseTypes.length;
 }, dependencies: [_providerOfRoutine]);
 
 final _providerOfRoutineExerciseTypes =
     AutoDisposeStateProvider<List<ExerciseType>>((ref) {
   final routine = ref.watch(_providerOfRoutine);
-  return routine != null ? routine.exerciseTypes : [];
+  return routine.exerciseTypes;
 }, dependencies: [_providerOfRoutine]);
 
-final _providerOfRoutine = AutoDisposeStateProvider<Routine?>((ref) => null);
+final _providerOfRoutine = AutoDisposeStateProvider<Routine>(
+    (ref) => throw '_providerOfRoutine needs to be scoped.');

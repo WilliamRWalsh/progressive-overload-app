@@ -14,7 +14,7 @@ class RoutineHiveService {
 
   Future<void> set(Routine routine) async {
     final box = await Hive.openBox<Routine>(boxName);
-    box.add(routine);
+    box.put(routine.guid, routine);
   }
 }
 

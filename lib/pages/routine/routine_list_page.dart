@@ -33,7 +33,6 @@ class RoutineListPage extends ConsumerWidget {
       ),
       body: routines.when(
         data: (routines) {
-          return LineChartSample2();
           return ListView.builder(
             itemCount: routines.length,
             itemBuilder: (context, index) {
